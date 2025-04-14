@@ -57,14 +57,31 @@
                 
                 <!-- Mobile-only table header -->
                 <div class="mobile-table-header">
-                    <span>Productos</span>
-                    <span>
-                        Seleccionar todos
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="check-all-mobile" checked>
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                    </span>
+                    <div class="header-row">
+                        <span><strong>Productos</strong></span>
+                        <span class="options-column">
+                            <div class="dropdown">
+                                <button class="dropdown-toggle">
+                                    <i class="fas fa-ellipsis"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item">
+                                        <i class="fas fa-download"></i> Descargar cotización
+                                    </button>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="header-row">
+                        <span class="items-count">Items seleccionados: <span class="mobile-item-count"></span></span>
+                        <span class="select-all-label">
+                            Seleccionar todos
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="check-all-mobile" checked>
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                        </span>
+                    </div>
                 </div>
     
                 <div class="cart-item">
@@ -357,7 +374,7 @@
                     
                     <div class="summary-item">
                         <span>Items seleccionados:</span>
-                        <span class="item-count">2</span>
+                        <span class="item-count"></span>
                     </div>
                 
                     <hr>

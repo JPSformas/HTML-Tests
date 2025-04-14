@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkAllCheckbox = document.getElementById("check-all")
   const checkAllCheckboxMobile = document.getElementById("check-all-mobile")
   const itemCountElement = document.querySelector(".summary-item .item-count")
+  const mobileItemCountElement = document.querySelector(".mobile-item-count")
   const subtotalElement = document.querySelector(".summary-item.subtotal .price-value")
   const ivaElement = document.querySelector(".summary-item.IVA .price-value")
   const totalElement = document.querySelector(".summary-item.total .price-value")
@@ -88,6 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Update item count in summary
     itemCountElement.textContent = checkedItems
+    if (mobileItemCountElement) {
+      mobileItemCountElement.textContent = checkedItems
+    }
 
     // Calculate subtotal
     const subtotal = calculateSubtotal()
@@ -931,4 +935,189 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add event listeners to delete buttons
   addDeleteButtonListeners()
+
+  // Function to check if we're on mobile
+  function isMobileView() {
+    return window.innerWidth <= 768
+  }
+
+  // Function to handle price info on mobile
+  function setupMobilePriceInfo() {
+    // Create the modal and overlay if they don't exist
+    if (!document.querySelector(".price-modal-overlay")) {
+      // Create overlay
+      const overlay = document.createElement("div")
+      overlay.className = "price-modal-overlay"
+      overlay.addEventListener("click", closePriceModal)
+      document.body.appendChild(overlay)
+
+      // Create modal
+      const modal = document.createElement("div")
+      modal.className = "price-modal"
+
+      // Create modal header
+      const header = document.createElement("div")
+      header.className = "price-modal-header"
+
+      const title = document.createElement("h3")
+      title.textContent = "Desglose de precio"
+
+      const closeButton = document.createElement("button")
+      closeButton.className = "close-price-modal"
+      closeButton.innerHTML = "&times;"
+      closeButton.addEventListener("click", closePriceModal)
+
+      header.appendChild(title)
+      header.appendChild(closeButton)
+      modal.appendChild(header)
+
+      // Create modal content container
+      const content = document.createElement("div")
+      content.className = "price-modal-content"
+      modal.appendChild(content)
+
+      document.body.appendChild(modal)
+    }
+
+    // Process price info elements
+    document.querySelectorAll(".cart-item").forEach((cartItem) => {
+      // Get the product title
+      const productTitle = cartItem ? cartItem.querySelector(".product-title").textContent : "Producto"
+
+      // Find the price info element
+      const priceInfo = cartItem.querySelector(".price-info")
+
+      // If price info doesn't exist, skip this item
+      if (!priceInfo) {
+        return
+      }
+
+      // Store product title as data attribute
+      priceInfo.dataset.product = productTitle
+
+      // Only create mobile price info elements if we're in mobile view
+      if (isMobileView()) {
+        // Check if this price info has already been processed for mobile
+        if (!cartItem.querySelector(".mobile-price-info")) {
+          // Create mobile price info icon
+          const mobileInfoIcon = document.createElement("div")
+          mobileInfoIcon.className = "mobile-price-info"
+          mobileInfoIcon.innerHTML = '<i class="fas fa-info-circle"></i>'
+          mobileInfoIcon.dataset.product = productTitle
+
+          // Add click event listener for mobile
+          mobileInfoIcon.addEventListener("click", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            openPriceModal(this)
+          })
+
+          // Find the unit price row
+          const unitPriceRow = cartItem.querySelector(".price-row:first-child")
+          if (unitPriceRow) {
+            const priceValue = unitPriceRow.querySelector(".price-value")
+            if (priceValue) {
+              // Create a container for the price value and info icon
+              const container = document.createElement("div")
+              container.className = "price-value-container"
+
+              // Clone the price value
+              const priceValueClone = priceValue.cloneNode(true)
+
+              // Add the elements to the container
+              container.appendChild(priceValueClone)
+              container.appendChild(mobileInfoIcon)
+
+              // Replace the original price value with the container
+              priceValue.parentNode.replaceChild(container, priceValue)
+            }
+          }
+        }
+      } else {
+        // If we're not in mobile view, restore original price values
+        const mobileInfoContainer = cartItem.querySelector(".price-value-container")
+        if (mobileInfoContainer) {
+          const priceValue = mobileInfoContainer.querySelector(":first-child")
+          if (priceValue && mobileInfoContainer.parentNode) {
+            mobileInfoContainer.parentNode.replaceChild(priceValue, mobileInfoContainer)
+          }
+        }
+      }
+    })
+  }
+
+  // Function to open price modal
+  function openPriceModal(priceInfoElement) {
+    const modal = document.querySelector(".price-modal")
+    const overlay = document.querySelector(".price-modal-overlay")
+    const modalContent = modal.querySelector(".price-modal-content")
+    const productTitle = priceInfoElement.dataset.product
+
+    // Update modal title
+    modal.querySelector(".price-modal-header h3").textContent = `Desglose de precio: ${productTitle}`
+
+    // Clear previous content
+    modalContent.innerHTML = ""
+
+    // Find the cart item with this product title
+    const cartItems = document.querySelectorAll(".cart-item")
+    let targetCartItem = null
+
+    for (let i = 0; i < cartItems.length; i++) {
+      const title = cartItems[i].querySelector(".product-title").textContent
+      if (title === productTitle) {
+        targetCartItem = cartItems[i]
+        break
+      }
+    }
+
+    if (!targetCartItem) return
+
+    // Get price tooltip content from the original price info element
+    const originalPriceInfo = targetCartItem.querySelector(".price-info")
+    const tooltipContent = originalPriceInfo ? originalPriceInfo.querySelector(".price-tooltip") : null
+
+    if (tooltipContent) {
+      // Clone the price info rows
+      const priceInfoRows = tooltipContent.querySelectorAll(".price-info-row")
+
+      priceInfoRows.forEach((row) => {
+        const modalRow = document.createElement("div")
+        modalRow.className = `price-modal-row ${row.classList.contains("total") ? "total" : ""} ${row.classList.contains("discount") ? "discount" : ""}`
+
+        // Clone the content
+        modalRow.innerHTML = row.innerHTML
+
+        modalContent.appendChild(modalRow)
+      })
+    } else {
+      // Fallback if tooltip content not found
+      modalContent.innerHTML = "<p>No hay información de desglose disponible.</p>"
+    }
+
+    // Show modal and overlay
+    modal.classList.add("open")
+    overlay.classList.add("show")
+    document.body.classList.add("modal-open")
+  }
+
+  // Function to close price modal
+  function closePriceModal() {
+    const modal = document.querySelector(".price-modal")
+    const overlay = document.querySelector(".price-modal-overlay")
+
+    if (modal && overlay) {
+      modal.classList.remove("open")
+      overlay.classList.remove("show")
+      document.body.classList.remove("modal-open")
+    }
+  }
+
+  // Call the setup function
+  setupMobilePriceInfo()
+
+  // Add resize listener to handle switching between mobile and desktop views
+  window.addEventListener("resize", () => {
+    setupMobilePriceInfo()
+  })
 })

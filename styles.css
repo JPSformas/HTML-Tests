@@ -39,6 +39,10 @@ body.sidebar-open {
   overflow: hidden;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -143,7 +147,6 @@ h1 {
 /* Three-dot menu and dropdown styles */
 .options-column {
   position: relative;
-  width: 100%;
 }
 
 .dropdown {
@@ -732,6 +735,19 @@ h1 {
 .price-info-row.discount .price-value {
   color: var(--green-highlight);
 }
+
+/* Mobile price info styles */
+.mobile-price-info {
+  display: none;
+}
+
+.price-value-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 100px;
+}
+
 .free-value {
   color: var(--green-highlight) !important; /* Green color for free items */
 }
@@ -935,7 +951,6 @@ hr {
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  font-size: 12px;
 }
 
 .coupon-input button {
@@ -945,7 +960,6 @@ hr {
   border: none;
   padding: 8px 15px;
   border-radius: 4px;
-  font-size: 12px;
   cursor: pointer;
 }
 
@@ -1203,27 +1217,24 @@ footer {
     gap: 20px;
   }
 
-  /* Hide the desktop table header on mobile */
   .table-header {
     display: none;
   }
 
-  /* Create a new mobile-only table header */
   .mobile-table-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
+    flex-direction: column;
+    padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
+    gap: 10px;
   }
 
-  .mobile-table-header span:first-child {
-    font-weight: bold;
-    font-size: 16px;
+  .items-count {
+    font-size: 14px;
   }
 
-  .mobile-table-header span:last-child {
+  .select-all-label {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1233,6 +1244,15 @@ footer {
 
   .mobile-table-header .checkbox-container {
     margin: 0px 12px 0px 5px;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .options-column {
+    margin-right: 10px;
   }
 
   .cart-item {
@@ -1252,7 +1272,7 @@ footer {
 
   .check-option {
     position: absolute;
-    top: 10px;
+    top: 18px;
     right: 10px;
     z-index: 10;
   }
@@ -1323,9 +1343,12 @@ footer {
   .total-row {
     margin-top: 5px;
     margin-bottom: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .net-price {
+    display: none;
     padding-top: 5px;
     font-size: 11px;
     margin-bottom: 10px;
@@ -1333,27 +1356,108 @@ footer {
 
   .item-actions {
     display: flex;
-    justify-content: flex-end;
-    gap: 15px;
+    justify-content: center;
     margin-top: 10px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 10px;
   }
 
-  .action-button {
-    padding: 5px;
+  .action-button.edit-logo,
+  .action-button.favorite,
+  .action-button.share {
+    padding-right: 30px;
+    margin-right: 30px;
   }
 
-  .action-button.edit-logo {
-    display: none;
-  }
-
-  .action-button:not(:last-child)::after {
-    display: none;
-  }
-
+  /* Hide desktop price info and show mobile price info */
   .price-info {
     display: none;
+  }
+
+  .mobile-price-info {
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  .mobile-price-info i {
+    color: var(--primary-color);
+    font-size: 12px;
+  }
+
+  /* Add these new styles for the mobile price modal */
+  .price-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    display: none;
+  }
+
+  .price-modal-overlay.show {
+    display: block;
+  }
+
+  .price-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .price-modal.open {
+    transform: translateY(0);
+  }
+
+  .price-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .price-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .close-price-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+
+  .price-modal-content {
+    padding: 20px;
+  }
+
+  .price-modal-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .price-modal-row.total {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    font-weight: bold;
+  }
+
+  .price-modal-row.discount .price-value {
+    color: var(--green-highlight);
   }
 
   .order-summary-container {
