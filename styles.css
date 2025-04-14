@@ -128,10 +128,13 @@ h1 {
   text-align: start;
   gap: 2%;
 }
-
 /*.table-header > span:not(:last-child) {
     text-align: start;
 }*/
+
+.mobile-table-header {
+  display: none;
+}
 
 /* Three-dot menu and dropdown styles */
 .options-column {
@@ -1072,6 +1075,10 @@ footer {
     overflow: hidden;
   }
 
+  .cart-item.checked {
+    border: 2px solid var(--primary-color);
+  }
+
   .check-option {
     position: absolute;
     top: 10px;
@@ -1085,18 +1092,19 @@ footer {
 
   .product-info {
     flex-direction: row;
-    padding: 15px;
+    padding: 15px 15px 10px 15px;
     gap: 12px;
   }
 
   .product-info img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
   }
 
   .product-details {
     flex: 1;
+    gap: 0px;
   }
 
   .quantity {
@@ -1115,8 +1123,13 @@ footer {
     font-size: 12px;
   }
 
-  .logo-info {
+  .logo-info, .cart-item-apparel .size-breakdown-toggle {
     font-size: 12px;
+  }
+
+  .cart-item-apparel .size-breakdown-toggle {
+    font-size: 12px;
+    margin: 5px 0px 10px 0px;
   }
 
   .cart-item-right {
@@ -1125,6 +1138,8 @@ footer {
 
   .price-details {
     gap: 5px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
   }
 
   .price-row {
@@ -1165,21 +1180,10 @@ footer {
     display: none;
   }
 
-  /* Hide price info icon on mobile */
   .price-info {
     display: none;
   }
 
-  /* Show "Mostrar desglose de talles" link for certain items */
-  .size-breakdown-toggle {
-    color: var(--primary-color);
-    font-size: 12px;
-    text-decoration: underline;
-    margin-top: 5px;
-    display: block;
-  }
-
-  /* Order summary styles for mobile */
   .order-summary-container {
     position: static;
     margin-top: 20px;
@@ -1198,14 +1202,6 @@ footer {
 
 /* Extra small devices */
 @media (max-width: 480px) {
-  .product-info {
-    padding: 12px;
-  }
-
-  .product-info img {
-    width: 70px;
-    height: 70px;
-  }
 
   .cart-item-right {
     padding: 0 12px 12px;

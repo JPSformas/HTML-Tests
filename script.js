@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Get all checkboxes, summary elements, and checkout button
   const checkboxes = document.querySelectorAll('input[name="buy-item"]')
   const checkAllCheckbox = document.getElementById("check-all")
+  const checkAllCheckboxMobile = document.getElementById("check-all-mobile");
   const itemCountElement = document.querySelector(".summary-item .item-count")
   const subtotalElement = document.querySelector(".summary-item.subtotal .price-value")
   const ivaElement = document.querySelector(".summary-item.IVA .price-value")
@@ -74,6 +75,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkedItems = document.querySelectorAll('input[name="buy-item"]:checked').length
     const totalRemainingItems = document.querySelectorAll('input[name="buy-item"]').length
 
+    // NEW CODE: Add or remove .checked on each .cart-item based on checkbox state
+    const allCheckboxes = document.querySelectorAll('input[name="buy-item"]');
+    allCheckboxes.forEach((checkbox) => {
+      const cartItem = checkbox.closest(".cart-item");
+      if (checkbox.checked) {
+        cartItem.classList.add("checked");
+      } else {
+        cartItem.classList.remove("checked");
+      }
+    });
+
     // Update item count in summary
     itemCountElement.textContent = checkedItems
 
@@ -123,26 +135,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update "check all" checkbox state
     checkAllCheckbox.checked = checkedItems > 0 && checkedItems === totalRemainingItems
     checkAllCheckbox.indeterminate = checkedItems > 0 && checkedItems < totalRemainingItems
+    checkAllCheckboxMobile.checked = checkAllCheckbox.checked;
+    checkAllCheckboxMobile.indeterminate = checkAllCheckbox.indeterminate;
   }
 
-  // Function to handle "check all" checkbox changes
-  function handleCheckAllChange() {
-    // Set all checkboxes to match the "check all" checkbox state
+  // 1) Single function that reads the event target's .checked
+  function handleCheckAllChange(e) {
+    const isChecked = e.target.checked;
+    // Set all checkboxes to match the "select all" checkbox’s state
     checkboxes.forEach((checkbox) => {
-      checkbox.checked = checkAllCheckbox.checked
-    })
-
+      checkbox.checked = isChecked;
+    });
     // Update the UI
-    updateUI()
+    updateUI();
   }
 
-  // Add event listener to "check all" checkbox
-  checkAllCheckbox.addEventListener("change", handleCheckAllChange)
+  // 2) Add event listeners for BOTH check-all inputs
+  checkAllCheckbox.addEventListener("change", handleCheckAllChange);
+  checkAllCheckboxMobile.addEventListener("change", handleCheckAllChange);
 
-  // Add event listeners to all item checkboxes
+  // 3) Keep the per-item event listeners as is
   checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", updateUI)
-  })
+    checkbox.addEventListener("change", updateUI);
+  });
+
 
   // Add event listeners to quantity inputs to update totals when quantity changes
   document.querySelectorAll(".quantity input").forEach((input) => {
