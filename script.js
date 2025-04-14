@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Get all checkboxes, summary elements, and checkout button
   const checkboxes = document.querySelectorAll('input[name="buy-item"]')
   const checkAllCheckbox = document.getElementById("check-all")
-  const checkAllCheckboxMobile = document.getElementById("check-all-mobile");
+  const checkAllCheckboxMobile = document.getElementById("check-all-mobile")
   const itemCountElement = document.querySelector(".summary-item .item-count")
   const subtotalElement = document.querySelector(".summary-item.subtotal .price-value")
   const ivaElement = document.querySelector(".summary-item.IVA .price-value")
@@ -76,15 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalRemainingItems = document.querySelectorAll('input[name="buy-item"]').length
 
     // NEW CODE: Add or remove .checked on each .cart-item based on checkbox state
-    const allCheckboxes = document.querySelectorAll('input[name="buy-item"]');
+    const allCheckboxes = document.querySelectorAll('input[name="buy-item"]')
     allCheckboxes.forEach((checkbox) => {
-      const cartItem = checkbox.closest(".cart-item");
+      const cartItem = checkbox.closest(".cart-item")
       if (checkbox.checked) {
-        cartItem.classList.add("checked");
+        cartItem.classList.add("checked")
       } else {
-        cartItem.classList.remove("checked");
+        cartItem.classList.remove("checked")
       }
-    });
+    })
 
     // Update item count in summary
     itemCountElement.textContent = checkedItems
@@ -135,30 +135,29 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update "check all" checkbox state
     checkAllCheckbox.checked = checkedItems > 0 && checkedItems === totalRemainingItems
     checkAllCheckbox.indeterminate = checkedItems > 0 && checkedItems < totalRemainingItems
-    checkAllCheckboxMobile.checked = checkAllCheckbox.checked;
-    checkAllCheckboxMobile.indeterminate = checkAllCheckbox.indeterminate;
+    checkAllCheckboxMobile.checked = checkAllCheckbox.checked
+    checkAllCheckboxMobile.indeterminate = checkAllCheckbox.indeterminate
   }
 
   // 1) Single function that reads the event target's .checked
   function handleCheckAllChange(e) {
-    const isChecked = e.target.checked;
+    const isChecked = e.target.checked
     // Set all checkboxes to match the "select all" checkbox’s state
     checkboxes.forEach((checkbox) => {
-      checkbox.checked = isChecked;
-    });
+      checkbox.checked = isChecked
+    })
     // Update the UI
-    updateUI();
+    updateUI()
   }
 
   // 2) Add event listeners for BOTH check-all inputs
-  checkAllCheckbox.addEventListener("change", handleCheckAllChange);
-  checkAllCheckboxMobile.addEventListener("change", handleCheckAllChange);
+  checkAllCheckbox.addEventListener("change", handleCheckAllChange)
+  checkAllCheckboxMobile.addEventListener("change", handleCheckAllChange)
 
   // 3) Keep the per-item event listeners as is
   checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", updateUI);
-  });
-
+    checkbox.addEventListener("change", updateUI)
+  })
 
   // Add event listeners to quantity inputs to update totals when quantity changes
   document.querySelectorAll(".quantity input").forEach((input) => {
@@ -235,8 +234,43 @@ document.addEventListener("DOMContentLoaded", () => {
     )
   }
 
-  // Function to create size breakdown button and dropdown
+  // Function to create size breakdown button and slide-out menu
   function addSizeBreakdownToApparelItems() {
+    // Create the overlay for mobile
+    if (!document.querySelector(".size-breakdown-overlay")) {
+      const overlay = document.createElement("div")
+      overlay.className = "size-breakdown-overlay"
+      overlay.addEventListener("click", closeSizeBreakdown)
+      document.body.appendChild(overlay)
+    }
+
+    // Create the slide-out menu container if it doesn't exist
+    if (!document.querySelector(".size-breakdown-sidebar")) {
+      const sidebar = document.createElement("div")
+      sidebar.className = "size-breakdown-sidebar"
+
+      const sidebarHeader = document.createElement("div")
+      sidebarHeader.className = "sidebar-header"
+
+      const sidebarTitle = document.createElement("h3")
+      sidebarTitle.textContent = "Desglose de talles"
+
+      const closeButton = document.createElement("button")
+      closeButton.className = "close-sidebar"
+      closeButton.innerHTML = "&times;"
+      closeButton.addEventListener("click", closeSizeBreakdown)
+
+      sidebarHeader.appendChild(sidebarTitle)
+      sidebarHeader.appendChild(closeButton)
+      sidebar.appendChild(sidebarHeader)
+
+      const sidebarContent = document.createElement("div")
+      sidebarContent.className = "sidebar-content"
+      sidebar.appendChild(sidebarContent)
+
+      document.body.appendChild(sidebar)
+    }
+
     document.querySelectorAll(".cart-item").forEach((cartItem) => {
       if (isApparelItem(cartItem)) {
         // Add apparel class to the cart item
@@ -252,195 +286,191 @@ document.addEventListener("DOMContentLoaded", () => {
           sizeBreakdownBtn.className = "size-breakdown-toggle"
           sizeBreakdownBtn.textContent = "Mostrar desglose de talles"
 
-          // Create size breakdown container
-          const sizeBreakdownContainer = document.createElement("div")
-          sizeBreakdownContainer.className = "size-breakdown-container"
-
-          // Sample size data - in a real application, this would come from your database
-          // For this example, we'll use the data from the image
-          const sizeData = [
-            { size: "S", quantity: 2, stock: 262 },
-            { size: "M", quantity: 3, stock: 5 },
-            { size: "L", quantity: 1, stock: 1633 },
-            { size: "XL", quantity: 4, stock: 30 },
-          ]
-
-          // Create size breakdown content
-          const sizeBreakdownContent = document.createElement("div")
-          sizeBreakdownContent.className = "size-breakdown-content"
-
-          // Add size rows
-          sizeData.forEach((sizeItem) => {
-            const sizeRow = document.createElement("div")
-            sizeRow.className = "size-row"
-
-            const sizeLabel = document.createElement("div")
-            sizeLabel.className = "size-label"
-            sizeLabel.innerHTML = `${sizeItem.size} <span class="stock-info">(${sizeItem.stock} un.)</span>`
-
-            const sizeQuantityInput = document.createElement("div")
-            sizeQuantityInput.className = "size-quantity-input"
-
-            const quantityInput = document.createElement("input")
-            quantityInput.type = "number"
-            quantityInput.className = "size-quantity"
-            quantityInput.placeholder = "Cantidad"
-            quantityInput.value = sizeItem.quantity || 0
-            quantityInput.min = "0"
-            quantityInput.max = sizeItem.stock
-            quantityInput.dataset.stock = sizeItem.stock
-
-            // Add up/down arrows for the input
-            const arrowsContainer = document.createElement("div")
-            arrowsContainer.className = "quantity-arrows"
-
-            const upArrow = document.createElement("div")
-            upArrow.className = "arrow up"
-            upArrow.innerHTML = "▲"
-            upArrow.addEventListener("click", () => {
-              const currentValue = Number.parseInt(quantityInput.value) || 0
-              const maxStock = Number.parseInt(quantityInput.dataset.stock)
-
-              if (currentValue < maxStock) {
-                quantityInput.value = currentValue + 1
-              } else {
-                quantityInput.value = maxStock
-                // Optional: Show a small notification that max stock was reached
-                const stockNotification = document.createElement("div")
-                stockNotification.className = "stock-notification"
-                stockNotification.textContent = `Máximo disponible: ${maxStock} un.`
-
-                // Position the notification near the input
-                const parent = quantityInput.closest(".size-quantity-input")
-
-                // Remove any existing notification
-                const existingNotification = parent.querySelector(".stock-notification")
-                if (existingNotification) {
-                  existingNotification.remove()
-                }
-
-                parent.appendChild(stockNotification)
-
-                // Remove the notification after 3 seconds
-                setTimeout(() => {
-                  stockNotification.remove()
-                }, 3000)
-              }
-
-              // Trigger change event
-              const event = new Event("change", { bubbles: true })
-              quantityInput.dispatchEvent(event)
-            })
-
-            const downArrow = document.createElement("div")
-            downArrow.className = "arrow down"
-            downArrow.innerHTML = "▼"
-            downArrow.addEventListener("click", () => {
-              const currentValue = Number.parseInt(quantityInput.value) || 0
-              if (currentValue > 0) {
-                quantityInput.value = currentValue - 1
-                // Trigger change event
-                const event = new Event("change", { bubbles: true })
-                quantityInput.dispatchEvent(event)
-              }
-            })
-
-            arrowsContainer.appendChild(upArrow)
-            arrowsContainer.appendChild(downArrow)
-
-            sizeQuantityInput.appendChild(quantityInput)
-            sizeQuantityInput.appendChild(arrowsContainer)
-
-            sizeRow.appendChild(sizeLabel)
-
-            sizeRow.appendChild(sizeQuantityInput)
-
-            sizeBreakdownContent.appendChild(sizeRow)
-          })
-
-          // Add "Add units" button
-          const addUnitsBtn = document.createElement("button")
-          addUnitsBtn.className = "add-units-btn"
-          addUnitsBtn.textContent = "Agregar unidades"
-          addUnitsBtn.addEventListener("click", () => {
-            // Get all size inputs
-            const sizeInputs = sizeBreakdownContent.querySelectorAll(".size-quantity")
-            let totalQuantity = 0
-
-            // Calculate total quantity
-            sizeInputs.forEach((input) => {
-              totalQuantity += Number.parseInt(input.value) || 0
-            })
-
-            // Update the main quantity input
-            const mainQuantityInput = cartItem.querySelector(".quantity input")
-            if (mainQuantityInput) {
-              mainQuantityInput.value = totalQuantity
-              // Trigger change event to update totals
-              const event = new Event("change", { bubbles: true })
-              mainQuantityInput.dispatchEvent(event)
-            }
-
-            // Hide the size breakdown
-            sizeBreakdownContainer.classList.remove("show")
-          })
-
-          sizeBreakdownContent.appendChild(addUnitsBtn)
-          sizeBreakdownContainer.appendChild(sizeBreakdownContent)
-
           // Add event listener to toggle size breakdown
           sizeBreakdownBtn.addEventListener("click", (e) => {
             e.preventDefault()
-            sizeBreakdownContainer.classList.toggle("show")
+            openSizeBreakdown(cartItem)
           })
 
-          // Add elements to the DOM
+          // Add button to the DOM
           const productInfoDiv = cartItem.querySelector(".product-info div")
           if (quantityContainer) {
             const nextSibling = quantityContainer.nextSibling
             if (nextSibling) {
-              // If there's a node after .quantity, insert before that node (thus after .quantity).
               productInfoDiv.insertBefore(sizeBreakdownBtn, nextSibling)
-              productInfoDiv.insertBefore(sizeBreakdownContainer, nextSibling)
             } else {
-              // If .quantity is the last child, just append at the end of productInfoDiv
               productInfoDiv.appendChild(sizeBreakdownBtn)
-              productInfoDiv.appendChild(sizeBreakdownContainer)
             }
           } else {
-            // Fallback if no .quantity found at all
             productInfoDiv.appendChild(sizeBreakdownBtn)
-            productInfoDiv.appendChild(sizeBreakdownContainer)
           }
-
-          // Close the size breakdown when clicking outside
-          document.addEventListener("click", (e) => {
-            if (
-              !sizeBreakdownBtn.contains(e.target) &&
-              !sizeBreakdownContainer.contains(e.target) &&
-              sizeBreakdownContainer.classList.contains("show")
-            ) {
-              sizeBreakdownContainer.classList.remove("show")
-            }
-          })
-
-          // Find all size quantity inputs and add input validation
-          const sizeQuantityInputs = cartItem.querySelectorAll(".size-quantity")
-
-          sizeQuantityInputs.forEach((input) => {
-            // Add input event listener to validate as user types
-            input.addEventListener("input", function () {
-              validateQuantityInput(this)
-            })
-
-            // Also keep the existing change event for when user completes input
-            input.addEventListener("change", function () {
-              validateQuantityInput(this)
-            })
-          })
         }
       }
     })
+  }
+
+  // Function to open the size breakdown sidebar
+  function openSizeBreakdown(cartItem) {
+    const productTitle = cartItem.querySelector(".product-title").textContent
+    const sidebar = document.querySelector(".size-breakdown-sidebar")
+    const sidebarContent = sidebar.querySelector(".sidebar-content")
+    const overlay = document.querySelector(".size-breakdown-overlay")
+
+    // Clear previous content
+    sidebarContent.innerHTML = ""
+
+    // Add product info to the sidebar
+    const productInfo = document.createElement("div")
+    productInfo.className = "sidebar-product-info"
+
+    const productImage = cartItem.querySelector(".product-info img").cloneNode(true)
+    productInfo.appendChild(productImage)
+
+    const productDetails = document.createElement("div")
+    productDetails.className = "sidebar-product-details"
+
+    const productName = document.createElement("h4")
+    productName.textContent = productTitle
+    productDetails.appendChild(productName)
+
+    productInfo.appendChild(productDetails)
+    sidebarContent.appendChild(productInfo)
+
+    // Sample size data - in a real application, this would come from your database
+    const sizeData = [
+      { size: "S", quantity: 2, stock: 262 },
+      { size: "M", quantity: 3, stock: 5 },
+      { size: "L", quantity: 1, stock: 1633 },
+      { size: "XL", quantity: 4, stock: 30 },
+    ]
+
+    // Create size breakdown content
+    const sizeBreakdownContent = document.createElement("div")
+    sizeBreakdownContent.className = "sidebar-size-breakdown"
+
+    // Add size rows
+    sizeData.forEach((sizeItem) => {
+      const sizeRow = document.createElement("div")
+      sizeRow.className = "sidebar-size-row"
+
+      const sizeLabel = document.createElement("div")
+      sizeLabel.className = "sidebar-size-label"
+      sizeLabel.innerHTML = `${sizeItem.size} <span class="stock-info">(${sizeItem.stock} un.)</span>`
+
+      const sizeQuantityInput = document.createElement("div")
+      sizeQuantityInput.className = "sidebar-size-quantity-input"
+
+      const quantityInput = document.createElement("input")
+      quantityInput.type = "number"
+      quantityInput.className = "sidebar-size-quantity"
+      quantityInput.placeholder = "Cantidad"
+      quantityInput.value = sizeItem.quantity || 0
+      quantityInput.min = "0"
+      quantityInput.max = sizeItem.stock
+      quantityInput.dataset.stock = sizeItem.stock
+
+      // Add up/down arrows for the input
+      const arrowsContainer = document.createElement("div")
+      arrowsContainer.className = "sidebar-quantity-arrows"
+
+      const upArrow = document.createElement("div")
+      upArrow.className = "sidebar-arrow up"
+      upArrow.innerHTML = "▲"
+      upArrow.addEventListener("click", () => {
+        const currentValue = Number.parseInt(quantityInput.value) || 0
+        const maxStock = Number.parseInt(quantityInput.dataset.stock)
+
+        if (currentValue < maxStock) {
+          quantityInput.value = currentValue + 1
+        } else {
+          quantityInput.value = maxStock
+          showStockNotification(quantityInput, maxStock)
+        }
+
+        // Trigger change event
+        const event = new Event("change", { bubbles: true })
+        quantityInput.dispatchEvent(event)
+      })
+
+      const downArrow = document.createElement("div")
+      downArrow.className = "sidebar-arrow down"
+      downArrow.innerHTML = "▼"
+      downArrow.addEventListener("click", () => {
+        const currentValue = Number.parseInt(quantityInput.value) || 0
+        if (currentValue > 0) {
+          quantityInput.value = currentValue - 1
+          // Trigger change event
+          const event = new Event("change", { bubbles: true })
+          quantityInput.dispatchEvent(event)
+        }
+      })
+
+      arrowsContainer.appendChild(upArrow)
+      arrowsContainer.appendChild(downArrow)
+
+      sizeQuantityInput.appendChild(quantityInput)
+      sizeQuantityInput.appendChild(arrowsContainer)
+
+      sizeRow.appendChild(sizeLabel)
+      sizeRow.appendChild(sizeQuantityInput)
+
+      sizeBreakdownContent.appendChild(sizeRow)
+
+      // Add input validation
+      quantityInput.addEventListener("input", function () {
+        validateQuantityInput(this)
+      })
+
+      quantityInput.addEventListener("change", function () {
+        validateQuantityInput(this)
+      })
+    })
+
+    sidebarContent.appendChild(sizeBreakdownContent)
+
+    // Add "Add units" button
+    const addUnitsBtn = document.createElement("button")
+    addUnitsBtn.className = "sidebar-add-units-btn"
+    addUnitsBtn.textContent = "Agregar unidades"
+    addUnitsBtn.addEventListener("click", () => {
+      // Get all size inputs
+      const sizeInputs = sizeBreakdownContent.querySelectorAll(".sidebar-size-quantity")
+      let totalQuantity = 0
+
+      // Calculate total quantity
+      sizeInputs.forEach((input) => {
+        totalQuantity += Number.parseInt(input.value) || 0
+      })
+
+      // Update the main quantity input
+      const mainQuantityInput = cartItem.querySelector(".quantity input")
+      if (mainQuantityInput) {
+        mainQuantityInput.value = totalQuantity
+        // Trigger change event to update totals
+        const event = new Event("change", { bubbles: true })
+        mainQuantityInput.dispatchEvent(event)
+      }
+
+      // Close the size breakdown
+      closeSizeBreakdown()
+    })
+
+    sidebarContent.appendChild(addUnitsBtn)
+
+    // Show the sidebar and overlay
+    sidebar.classList.add("open")
+    overlay.classList.add("show")
+    document.body.classList.add("sidebar-open")
+  }
+
+  // Function to close the size breakdown sidebar
+  function closeSizeBreakdown() {
+    const sidebar = document.querySelector(".size-breakdown-sidebar")
+    const overlay = document.querySelector(".size-breakdown-overlay")
+
+    sidebar.classList.remove("open")
+    overlay.classList.remove("show")
+    document.body.classList.remove("sidebar-open")
   }
 
   // New function to validate quantity input
@@ -464,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stockNotification.textContent = `Máximo disponible: ${maxStock} un.`
 
     // Position the notification near the input
-    const parent = inputElement.closest(".size-quantity-input")
+    const parent = inputElement.closest(".sidebar-size-quantity-input") || inputElement.closest(".size-quantity-input")
 
     // Remove any existing notification
     const existingNotification = parent.querySelector(".stock-notification")
