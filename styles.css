@@ -1055,13 +1055,12 @@ footer {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-right: 6px;
     font-size: 14px;
     color: #686868;
   }
 
   .mobile-table-header .checkbox-container {
-    margin-left: 5px;
+    margin: 0px 12px 0px 5px;
   }
 
   .cart-item {
