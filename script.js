@@ -1147,30 +1147,31 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     
-    // Toggle collapsed state when header is clicked
-    mobileSummaryHeader.addEventListener("click", () => {
-      mobileOrderSummary.classList.toggle("collapsed");
-    });
-
-    // NEW CODE: Add scroll-based expansion based on summary position
-    let lastScrollPosition = 0
+    // NEW CODE: Improved manual toggle and auto-expansion handling
     let isManuallyToggled = false
     let manualToggleTimeout = null
+    let manualToggleState = null // Will store the manually set state (expanded or collapsed)
+    let lastScrollPosition = 0
+
+    // Calculate the trigger point (slightly above the middle of the viewport)
+    function calculateTriggerPoint() {
+      const viewportMiddle = window.innerHeight / 2
+      const triggerOffset = 100 // 100px above the middle
+      return viewportMiddle - triggerOffset
+    }
 
     // Function to check if the summary should expand or collapse
     function checkSummaryPosition() {
-      // If the user manually toggled the summary recently, don't auto-toggle
+      // If the user manually toggled the summary recently, respect that choice
       if (isManuallyToggled) return
 
       // Get the position of the mobile order summary
       const summaryRect = mobileOrderSummary.getBoundingClientRect()
 
-      // Calculate the middle of the viewport
-      const viewportMiddle = window.innerHeight / 2 
-      const triggerOffset = 50
-      const triggerPoint = viewportMiddle - triggerOffset
+      // Get the current trigger point
+      const triggerPoint = calculateTriggerPoint()
 
-      // Check if the top of the summary is at or above the middle of the viewport
+      // Check if the top of the summary is at or above the trigger point
       if (summaryRect.top <= triggerPoint) {
         // Expand the summary
         mobileOrderSummary.classList.remove("collapsed")
@@ -1191,8 +1192,21 @@ document.addEventListener("DOMContentLoaded", () => {
       lastScrollPosition = window.scrollY
     }
 
-    // Override the click handler to track manual toggles
+    // Improved manual toggle handler
     mobileSummaryHeader.addEventListener("click", (e) => {
+      e.stopPropagation() // Prevent event bubbling
+
+      // Toggle the collapsed state
+      const wasCollapsed = mobileOrderSummary.classList.contains("collapsed")
+
+      if (wasCollapsed) {
+        mobileOrderSummary.classList.remove("collapsed")
+        manualToggleState = "expanded"
+      } else {
+        mobileOrderSummary.classList.add("collapsed")
+        manualToggleState = "collapsed"
+      }
+
       // Set the manual toggle flag
       isManuallyToggled = true
 
@@ -1201,24 +1215,50 @@ document.addEventListener("DOMContentLoaded", () => {
         clearTimeout(manualToggleTimeout)
       }
 
-      // Reset the flag after a delay (3 seconds)
+      // Reset the flag after a longer delay (5 seconds)
       manualToggleTimeout = setTimeout(() => {
-        isManuallyToggled = false
-        checkSummaryPosition() // Re-check position after timeout
-      }, 3000)
+        // Only return to automatic behavior if the user hasn't scrolled significantly
+        const currentScrollPosition = window.scrollY
+        const hasScrolledSignificantly = Math.abs(currentScrollPosition - lastScrollPosition) > 50
 
-      // Toggle the collapsed state
-      mobileOrderSummary.classList.toggle("collapsed")
+        if (!hasScrolledSignificantly) {
+          isManuallyToggled = false
+          manualToggleState = null
+          // Don't immediately check position - wait for next scroll
+        }
+      }, 5000)
     })
 
-    // Add scroll event listener
-    window.addEventListener("scroll", handleScroll, { passive: true })
+    // Add scroll event listener with throttling for better performance
+    let scrollTimeout
+    window.addEventListener(
+      "scroll",
+      () => {
+        // Clear the previous timeout
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout)
+        }
+
+        // Set a new timeout to run the scroll handler
+        scrollTimeout = setTimeout(handleScroll, 10)
+      },
+      { passive: true },
+    )
 
     // Check position on resize as well
-    window.addEventListener("resize", checkSummaryPosition)
+    let resizeTimeout
+    window.addEventListener("resize", () => {
+      // Clear the previous timeout
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout)
+      }
+
+      // Set a new timeout to run the resize handler
+      resizeTimeout = setTimeout(checkSummaryPosition, 100)
+    })
 
     // Initial check
-    checkSummaryPosition()
+    setTimeout(checkSummaryPosition, 500) // Slight delay to ensure proper rendering
     
     // Update mobile summary whenever desktop summary changes
     const desktopSummary = document.querySelector(".desktop-order-summary-container");
