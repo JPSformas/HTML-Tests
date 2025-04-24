@@ -1156,7 +1156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Calculate the trigger point (slightly above the middle of the viewport)
     function calculateTriggerPoint() {
       const viewportMiddle = window.innerHeight / 2
-      const triggerOffset = 100 // 100px above the middle
+      const triggerOffset = 200 // 100px above the middle
       return viewportMiddle - triggerOffset
     }
 
