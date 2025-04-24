@@ -312,7 +312,6 @@ h1 {
   top: 0;
   right: -100%;
   width: 85%;
-  max-width: 350px;
   height: 100%;
   background-color: white;
   z-index: 9999;
@@ -928,6 +927,101 @@ hr {
   font-size: 20px;
 }
 
+/* Mobile Order Summary (hidden on desktop) */
+.mobile-order-summary {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 0px -3px 3px 0px rgba(0, 0, 0, 0.1);*/
+  border-radius: 4px;
+  padding: 0;
+  transition: transform 0.3s ease, max-height 0.3s ease;
+  max-height: 85vh;
+  margin-top: 40px;
+  overflow-y: auto;
+}
+
+.mobile-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 15px 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.mobile-summary-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mobile-summary-total-container{
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.mobile-summary-total {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.mobile-summary-toggle {
+  color: var(--primary-color);
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.mobile-order-summary.collapsed .mobile-summary-toggle {
+  transform: rotate(180deg);
+}
+
+.mobile-summary-content {
+  padding: 0 20px 15px;
+  opacity: 1;
+  transition: opacity 0.3s, max-height 0.3s;
+  max-height: 1000px;
+}
+
+.mobile-order-summary.collapsed .mobile-summary-content {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.mobile-order-summary .checkout {
+  margin: 15px 20px 20px;
+  width: calc(100% - 40px);
+  font-family: "Gilroy";
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/*.mobile-order-summary.collapsed .checkout {
+  position: absolute;
+  top: 10px;
+  right: 50px;
+  width: auto;
+  margin: 0;
+  padding: 6px 12px;
+  font-size: 13px;
+  z-index: 10;
+}*/
+
 /* // Coupon Section Styles // */
 .coupon-section {
   margin-top: 20px;
@@ -1486,9 +1580,27 @@ footer {
     font-size: 14px;
   }
 
+  .desktop-order-summary-container {
+    display: none;
+  }
+  
+  .mobile-order-summary {
+    display: block;
+    position: sticky
+  }
+  
+  /* Adjust the height of the collapsed summary */
+  .mobile-order-summary.collapsed {
+    overflow: hidden;
+  }
+
   /* Hide the original size breakdown container on mobile */
   .size-breakdown-container {
     display: none !important;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -1498,9 +1610,6 @@ footer {
     padding: 0 12px 12px;
   }
 
-  .size-breakdown-sidebar {
-    max-width: none;
-  }
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -1513,125 +1622,4 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
-}
-
-
-/* Add these styles at the end of your CSS file */
-
-/* Mobile Order Summary (hidden on desktop) */
-.mobile-order-summary {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-color: white;
-  box-shadow: 0 -6px 16px rgba(0, 0, 0, 0.1);
-  /*box-shadow: 0px -3px 3px 0px rgba(0, 0, 0, 0.1);*/
-  border-radius: 4px;
-  padding: 0;
-  transition: transform 0.3s ease, max-height 0.3s ease;
-  max-height: 85vh;
-  margin-top: 40px;
-  overflow-y: auto;
-}
-
-.mobile-summary-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 15px 20px;
-  cursor: pointer;
-  position: relative;
-}
-
-.mobile-summary-header h2 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.mobile-summary-total-container{
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.mobile-summary-total {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.mobile-summary-toggle {
-  color: var(--primary-color);
-  font-size: 20px;
-  transition: transform 0.3s;
-}
-
-.mobile-order-summary.collapsed .mobile-summary-toggle {
-  transform: rotate(180deg);
-}
-
-.mobile-summary-content {
-  padding: 0 20px 15px;
-  opacity: 1;
-  transition: opacity 0.3s, max-height 0.3s;
-  max-height: 1000px;
-}
-
-.mobile-order-summary.collapsed .mobile-summary-content {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.mobile-order-summary .checkout {
-  margin: 15px 20px 20px;
-  width: calc(100% - 40px);
-  font-family: "Gilroy";
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-/*.mobile-order-summary.collapsed .checkout {
-  position: absolute;
-  top: 10px;
-  right: 50px;
-  width: auto;
-  margin: 0;
-  padding: 6px 12px;
-  font-size: 13px;
-  z-index: 10;
-}*/
-
-/* Media queries for responsive design */
-@media (max-width: 768px) {
-  /* Hide desktop summary and show mobile summary */
-  .desktop-order-summary-container {
-    display: none;
-  }
-  
-  .mobile-order-summary {
-    display: block;
-    position: sticky
-  }
-  
-  /* Add padding to the bottom of the page to account for the fixed summary */
-  main {
-    padding-bottom: 80px;
-  }
-  
-  /* Adjust the height of the collapsed summary */
-  .mobile-order-summary.collapsed {
-    overflow: hidden;
-  }
 }

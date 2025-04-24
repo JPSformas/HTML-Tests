@@ -1151,6 +1151,72 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileSummaryHeader.addEventListener("click", () => {
       mobileOrderSummary.classList.toggle("collapsed");
     });
+
+    // NEW CODE: Add scroll-based expansion based on summary position
+    let lastScrollPosition = 0
+    let isManuallyToggled = false
+    let manualToggleTimeout = null
+
+    // Function to check if the summary should expand or collapse
+    function checkSummaryPosition() {
+      // If the user manually toggled the summary recently, don't auto-toggle
+      if (isManuallyToggled) return
+
+      // Get the position of the mobile order summary
+      const summaryRect = mobileOrderSummary.getBoundingClientRect()
+
+      // Calculate the middle of the viewport
+      const viewportMiddle = window.innerHeight / 2
+
+      // Check if the top of the summary is at or above the middle of the viewport
+      if (summaryRect.top <= viewportMiddle) {
+        // Expand the summary
+        mobileOrderSummary.classList.remove("collapsed")
+      } else {
+        // Collapse the summary
+        mobileOrderSummary.classList.add("collapsed")
+      }
+    }
+
+    // Function to handle scroll events
+    function handleScroll() {
+      // Skip position check if manually toggled recently
+      if (!isManuallyToggled) {
+        checkSummaryPosition()
+      }
+
+      // Store the last scroll position
+      lastScrollPosition = window.scrollY
+    }
+
+    // Override the click handler to track manual toggles
+    mobileSummaryHeader.addEventListener("click", (e) => {
+      // Set the manual toggle flag
+      isManuallyToggled = true
+
+      // Clear any existing timeout
+      if (manualToggleTimeout) {
+        clearTimeout(manualToggleTimeout)
+      }
+
+      // Reset the flag after a delay (3 seconds)
+      manualToggleTimeout = setTimeout(() => {
+        isManuallyToggled = false
+        checkSummaryPosition() // Re-check position after timeout
+      }, 3000)
+
+      // Toggle the collapsed state
+      mobileOrderSummary.classList.toggle("collapsed")
+    })
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    // Check position on resize as well
+    window.addEventListener("resize", checkSummaryPosition)
+
+    // Initial check
+    checkSummaryPosition()
     
     // Update mobile summary whenever desktop summary changes
     const desktopSummary = document.querySelector(".desktop-order-summary-container");
