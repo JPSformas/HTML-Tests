@@ -1166,7 +1166,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const summaryRect = mobileOrderSummary.getBoundingClientRect()
 
       // Calculate the middle of the viewport
-      const viewportMiddle = window.innerHeight / 2
+      const viewportMiddle = window.innerHeight / 2 - 100
 
       // Check if the top of the summary is at or above the middle of the viewport
       if (summaryRect.top <= viewportMiddle) {
