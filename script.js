@@ -1166,10 +1166,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const summaryRect = mobileOrderSummary.getBoundingClientRect()
 
       // Calculate the middle of the viewport
-      const viewportMiddle = window.innerHeight / 2 - 100
+      const viewportMiddle = window.innerHeight / 2 
+      const triggerOffset = 200
+      const triggerPoint = viewportMiddle - triggerOffset
 
       // Check if the top of the summary is at or above the middle of the viewport
-      if (summaryRect.top <= viewportMiddle) {
+      if (summaryRect.top <= triggerPoint) {
         // Expand the summary
         mobileOrderSummary.classList.remove("collapsed")
       } else {
