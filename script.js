@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const ivaElement = document.querySelector(".summary-item.IVA .price-value")
   const totalElement = document.querySelector(".summary-item.total .price-value")
   const checkoutButton = document.querySelector(".checkout")
+  const mobileSummary = document.querySelector('.mobile-order-summary');
+  const recommendedSection = document.querySelector('.recommended');
+
 
   // Initial count of total items
   const totalItems = checkboxes.length
@@ -171,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Get the unit price and setup price
       const unitPriceElement = cartItem.querySelector(".price-row:first-child .price-value")
-      const setupPriceElement = cartItem.querySelector(".price-row.setup-row .price-value")
+      const setupPriceElement = cartItem.querySelector(".price-row:nth-child(2) .price-value")
       const totalPriceElement = cartItem.querySelector(".price-row.total-row .price-value")
 
       if (unitPriceElement && totalPriceElement) {
@@ -189,6 +192,14 @@ document.addEventListener("DOMContentLoaded", () => {
         updateUI()
       }
     })
+
+    input.addEventListener("click", function(e) {
+      const cartItem = this.closest(".cart-item");
+      if (cartItem && cartItem.classList.contains("cart-item-apparel")) {
+        e.preventDefault();
+        openSizeBreakdown(cartItem);
+      }
+    });
   })
 
   // Apply green color only to "Gratis" setup values
@@ -308,6 +319,11 @@ document.addEventListener("DOMContentLoaded", () => {
           } else {
             productInfoDiv.appendChild(sizeBreakdownBtn)
           }
+        }
+        const quantityInput = cartItem.querySelector(".quantity input");
+        if (quantityInput) {
+          quantityInput.style.cursor = "pointer";
+          quantityInput.readOnly = true // Make it read-only
         }
       }
     })
@@ -450,6 +466,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const mainQuantityInput = cartItem.querySelector(".quantity input")
       if (mainQuantityInput) {
         mainQuantityInput.value = totalQuantity
+
+        // Get the unit price and setup price
+        const unitPriceElement = cartItem.querySelector(".price-row:first-child .price-value")
+        const setupPriceElement = cartItem.querySelector(".price-row:nth-child(2) .price-value")
+        const totalPriceElement = cartItem.querySelector(".price-row.total-row .price-value")
+
+        if (unitPriceElement && totalPriceElement) {
+          const unitPrice = parsePrice(unitPriceElement.textContent)
+          const setupPrice = setupPriceElement ? parsePrice(setupPriceElement.textContent) : 0
+
+          // Calculate new total for this item
+          const itemTotal = unitPrice * totalQuantity + setupPrice
+
+          // Update the item total
+          totalPriceElement.textContent = formatPrice(itemTotal)
+        }
         // Trigger change event to update totals
         const event = new Event("change", { bubbles: true })
         mainQuantityInput.dispatchEvent(event)
@@ -517,11 +549,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Call the function to add size breakdown to apparel items
   addSizeBreakdownToApparelItems()
 
-  // Coupon validation functionality
-  const couponInput = document.querySelector(".coupon-input input")
-  const couponButton = document.querySelector(".coupon-input button")
-  const couponSection = document.querySelector(".coupon-section")
-
   // List of valid coupons with their discount percentages
   const validCoupons = [
     { code: "FP5", discount: 0.05 },
@@ -531,239 +558,172 @@ document.addEventListener("DOMContentLoaded", () => {
     { code: "FRENZY30", discount: 0.3 },
   ]
 
-  // Function to validate coupon
-  function validateCoupon() {
-    const couponValue = couponInput.value.trim().toUpperCase()
+  // Coupon validation functionality for both desktop and mobile order summaries
+  const couponSections = document.querySelectorAll(".coupon-section");
 
-    // Remove any existing error message
-    const existingError = couponSection.querySelector(".coupon-error")
-    if (existingError) {
-      existingError.remove()
-    }
+  // For each coupon section (desktop and mobile) attach events
+  couponSections.forEach(section => {
+    const couponInput = section.querySelector(".coupon-input input");
+    const couponButton = section.querySelector(".coupon-input button");
 
-    // Remove any existing success message
-    const existingSuccess = couponSection.querySelector(".coupon-success")
-    if (existingSuccess) {
-      existingSuccess.remove()
-    }
+    couponButton.addEventListener("click", () => {
+      validateCoupon(couponInput);
+    });
 
-    // Reset input style
-    couponInput.classList.remove("error")
-    couponInput.classList.remove("success")
+    couponInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        validateCoupon(couponInput);
+      }
+    });
+
+    couponInput.addEventListener("input", () => {
+      // Clear any existing error or success messages in all coupon sections
+      couponSections.forEach(sec => {
+        const input = sec.querySelector(".coupon-input input");
+        input.classList.remove("error", "success");
+        const existingError = sec.querySelector(".coupon-error");
+        if (existingError) existingError.remove();
+      });
+    });
+  });
+
+  // Modified coupon validation function that works for both sections
+  function validateCoupon(fromInput) {
+    const couponValue = fromInput.value.trim().toUpperCase();
+
+    // Remove any existing error messages in all coupon sections
+    couponSections.forEach(section => {
+      const existingError = section.querySelector(".coupon-error");
+      if (existingError) existingError.remove();
+    });
 
     // If empty, just return
-    if (!couponValue) return
+    if (!couponValue) return;
 
     // Check if coupon is valid
-    const coupon = validCoupons.find((c) => c.code === couponValue)
+    const coupon = validCoupons.find((c) => c.code === couponValue);
 
     if (coupon) {
-      // Valid coupon - add success styling
-      couponInput.classList.add("success")
+      // Coupon is valid – update every coupon section
+      couponSections.forEach(section => {
+        const input = section.querySelector(".coupon-input input");
+        input.classList.remove("error");
+        input.classList.add("success");
+        const couponInputContainer = section.querySelector(".coupon-input");
+        couponInputContainer.style.display = "none";
+        // Remove any previously applied coupon UI if exists
+        const existingApplied = section.querySelector(".applied-coupon");
+        if (existingApplied) existingApplied.remove();
 
-      // Store the current coupon
-      currentCoupon = coupon
-
-      // Apply discount based on coupon code
-      updateCouponDiscount(coupon)
-
-      // Show the applied coupon UI
-      showAppliedCoupon(coupon)
+        // Create the applied coupon element
+        const appliedCouponContainer = document.createElement("div");
+        appliedCouponContainer.className = "applied-coupon";
+        appliedCouponContainer.innerHTML = `
+          <div class="coupon-check">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="coupon-info">
+            <div class="coupon-code">${coupon.code} aplicado</div>
+            <div class="coupon-discount">${coupon.discount * 100}% off</div>
+          </div>
+          <button class="remove-coupon">Quitar</button>
+        `;
+        section.appendChild(appliedCouponContainer);
+        appliedCouponContainer.querySelector(".remove-coupon").addEventListener("click", removeCoupon);
+      });
+      // Store the current coupon globally and update discount info
+      currentCoupon = coupon;
+      updateCouponDiscount(coupon);
     } else {
-      // Invalid coupon - add error styling
-      couponInput.classList.add("error")
-
-      // Create error message
-      const errorMessage = document.createElement("div")
-      errorMessage.className = "coupon-error"
-      errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Revisa que esté bien escrito'
-
-      // Add error message
-      couponSection.appendChild(errorMessage)
+      // Coupon is invalid – show error in every coupon section
+      couponSections.forEach(section => {
+        const input = section.querySelector(".coupon-input input");
+        input.classList.remove("success");
+        input.classList.add("error");
+        if (!section.querySelector(".coupon-error")) {
+          const errorMessage = document.createElement("div");
+          errorMessage.className = "coupon-error";
+          errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Revisa que esté bien escrito';
+          section.appendChild(errorMessage);
+        }
+      });
     }
   }
 
-  // Function to show the applied coupon UI
-  function showAppliedCoupon(coupon) {
-    // Calculate subtotal and discount amount
-    const subtotal = calculateSubtotal()
-    const discountAmount = subtotal * coupon.discount
-
-    // Hide the coupon input and button
-    const couponInputContainer = document.querySelector(".coupon-input")
-    couponInputContainer.style.display = "none"
-
-    // Create the applied coupon container
-    const appliedCouponContainer = document.createElement("div")
-    appliedCouponContainer.className = "applied-coupon"
-
-    // Create the applied coupon content
-    appliedCouponContainer.innerHTML = `
-      <div class="coupon-check">
-        <i class="fas fa-check-circle"></i>
-      </div>
-      <div class="coupon-info">
-        <div class="coupon-code">${coupon.code} aplicado</div>
-        <div class="coupon-discount">${coupon.discount * 100}% off</div>
-      </div>
-      <button class="remove-coupon">Quitar</button>
-    `
-
-    // Add the applied coupon container to the coupon section
-    couponSection.appendChild(appliedCouponContainer)
-
-    // Add event listener to the remove button
-    const removeButton = appliedCouponContainer.querySelector(".remove-coupon")
-    removeButton.addEventListener("click", removeCoupon)
-  }
-
-  // Function to remove the applied coupon
-  function removeCoupon() {
-    // Remove the applied coupon container
-    const appliedCouponContainer = document.querySelector(".applied-coupon")
-    if (appliedCouponContainer) {
-      appliedCouponContainer.remove()
-    }
-
-    // Show the coupon input and button again
-    const couponInputContainer = document.querySelector(".coupon-input")
-    couponInputContainer.style.display = "flex"
-
-    // Clear the input field
-    couponInput.value = ""
-
-    // Reset input styling - fix for the green border bug
-    couponInput.classList.remove("success")
-    couponInput.classList.remove("error")
-
-    // Remove any existing discount from the summary
-    const discountElement = document.querySelector(".summary-item.discount")
-    if (discountElement) {
-      discountElement.remove()
-    }
-
-    // Remove the total_sin_IVA row
-    const totalSinIvaElement = document.querySelector(".summary-item.total_sin_IVA")
-    if (totalSinIvaElement) {
-      totalSinIvaElement.remove()
-    }
-
-    // Clear the current coupon
-    currentCoupon = null
-
-    // Update the UI without discount
-    updateUI()
-  }
-
-  // Function to update coupon discount based on current subtotal
+  // Update the discount UI in all order summaries (both desktop and mobile)
   function updateCouponDiscount(coupon) {
-    // Calculate subtotal
-    const subtotal = calculateSubtotal()
+    const subtotal = calculateSubtotal();
+    const discountAmount = subtotal * coupon.discount;
 
-    // Calculate discount amount
-    const discountAmount = subtotal * coupon.discount
+    // Find each order summary container (desktop and mobile)
+    const summaryContainers = document.querySelectorAll(".order-summary, .mobile-summary-content");
 
-    // Check if discount section already exists
-    let discountElement = document.querySelector(".summary-item.discount")
+    summaryContainers.forEach(container => {
+      // Remove any existing discount or total_sin_IVA elements
+      container.querySelectorAll(".summary-item.discount, .summary-item.total_sin_IVA").forEach(el => el.remove());
 
-    if (!discountElement) {
-      // Create discount element if it doesn't exist
-      discountElement = document.createElement("div")
-      discountElement.className = "summary-item discount"
+      // Create discount element
+      const discountElement = document.createElement("div");
+      discountElement.className = "summary-item discount";
+      const discountLabel = document.createElement("span");
+      discountLabel.textContent = "Descuento:";
+      const discountValue = document.createElement("span");
+      discountValue.className = "price-value discount-value";
+      discountValue.textContent = "- " + formatPrice(discountAmount);
+      discountElement.appendChild(discountLabel);
+      discountElement.appendChild(discountValue);
 
-      const discountLabel = document.createElement("span")
-      discountLabel.textContent = "Descuento:"
+      // Insert discount element before the IVA section
+      const ivaContainer = container.querySelector(".summary-item.IVA");
+      if (ivaContainer) {
+        ivaContainer.parentNode.insertBefore(discountElement, ivaContainer);
+      }
 
-      const discountValue = document.createElement("span")
-      discountValue.className = "price-value discount-value"
+      // Create total sin impuestos element
+      const totalSinIvaElement = document.createElement("div");
+      totalSinIvaElement.className = "summary-item total_sin_IVA";
+      const totalSinIvaLabel = document.createElement("span");
+      totalSinIvaLabel.textContent = "Total sin impuestos:";
+      const totalSinIvaValue = document.createElement("span");
+      totalSinIvaValue.className = "price-value";
+      const totalSinIva = subtotal - discountAmount;
+      totalSinIvaValue.textContent = formatPrice(totalSinIva);
+      totalSinIvaElement.appendChild(totalSinIvaLabel);
+      totalSinIvaElement.appendChild(totalSinIvaValue);
+      if (ivaContainer) {
+        ivaContainer.parentNode.insertBefore(totalSinIvaElement, ivaContainer);
+      }
 
-      discountElement.appendChild(discountLabel)
-      discountElement.appendChild(discountValue)
+      // Calculate IVA (21% rate) and new total
+      const iva = totalSinIva * IVA_RATE;
+      const total = totalSinIva + iva;
 
-      // Insert before IVA
-      const ivaElement = document.querySelector(".summary-item.IVA")
-      ivaElement.parentNode.insertBefore(discountElement, ivaElement)
-    }
-
-    // Update discount value
-    const discountValueElement = discountElement.querySelector(".price-value")
-    discountValueElement.textContent = "- " + formatPrice(discountAmount)
-
-    // Update the applied coupon UI if it exists
-    const appliedCouponDiscount = document.querySelector(".coupon-discount")
-    if (appliedCouponDiscount) {
-      appliedCouponDiscount.textContent = `-${formatPrice(discountAmount)} (${coupon.discount * 100}% off)`
-    }
-
-    // Calculate total without IVA (subtotal - discount)
-    const totalSinIva = subtotal - discountAmount
-
-    // Check if total_sin_IVA section already exists
-    let totalSinIvaElement = document.querySelector(".summary-item.total_sin_IVA")
-
-    if (!totalSinIvaElement) {
-      // Create total_sin_IVA element if it doesn't exist
-      totalSinIvaElement = document.createElement("div")
-      totalSinIvaElement.className = "summary-item total_sin_IVA"
-
-      const totalSinIvaLabel = document.createElement("span")
-      totalSinIvaLabel.textContent = "Total sin impuestos:"
-
-      const totalSinIvaValue = document.createElement("span")
-      totalSinIvaValue.className = "price-value"
-
-      totalSinIvaElement.appendChild(totalSinIvaLabel)
-      totalSinIvaElement.appendChild(totalSinIvaValue)
-
-      // Insert before IVA
-      const ivaElement = document.querySelector(".summary-item.IVA")
-      ivaElement.parentNode.insertBefore(totalSinIvaElement, ivaElement)
-    }
-
-    // Update total_sin_IVA value
-    const totalSinIvaValueElement = totalSinIvaElement.querySelector(".price-value")
-    totalSinIvaValueElement.textContent = formatPrice(totalSinIva)
-
-    // Calculate IVA (21% of total_sin_IVA)
-    const iva = totalSinIva * IVA_RATE
-
-    // Calculate total (total_sin_IVA + IVA)
-    const total = totalSinIva + iva
-
-    // Update summary values
-    ivaElement.textContent = formatPrice(iva)
-    totalElement.textContent = formatPrice(total)
+      // Update the IVA and Total elements in this container
+      const ivaValueElem = container.querySelector(".summary-item.IVA .price-value");
+      const totalValueElem = container.querySelector(".summary-item.total .price-value");
+      if (ivaValueElem) ivaValueElem.textContent = formatPrice(iva);
+      if (totalValueElem) totalValueElem.textContent = formatPrice(total);
+    });
   }
 
-  // Add event listener to coupon button
-  couponButton.addEventListener("click", validateCoupon)
+  // Remove coupon and restore coupon input in all coupon sections
+  function removeCoupon() {
+    couponSections.forEach(section => {
+      const appliedCouponContainer = section.querySelector(".applied-coupon");
+      if (appliedCouponContainer) appliedCouponContainer.remove();
+      const couponInputContainer = section.querySelector(".coupon-input");
+      couponInputContainer.style.display = "flex";
+      const input = section.querySelector(".coupon-input input");
+      input.value = "";
+      input.classList.remove("success", "error");
+    });
+    // Remove discount UI elements from both order summaries
+    document.querySelectorAll(".summary-item.discount, .summary-item.total_sin_IVA").forEach(el => el.remove());
+    currentCoupon = null;
+    updateUI();
+  }
 
-  // Add event listener for Enter key on coupon input
-  couponInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      validateCoupon()
-    }
-  })
-
-  // Clear error when typing in coupon input
-  couponInput.addEventListener("input", () => {
-    // Remove any existing error message
-    const existingError = couponSection.querySelector(".coupon-error")
-    if (existingError) {
-      existingError.remove()
-    }
-
-    // Remove any existing success message
-    const existingSuccess = couponSection.querySelector(".coupon-success")
-    if (existingSuccess) {
-      existingSuccess.remove()
-    }
-
-    // Reset input style
-    couponInput.classList.remove("error")
-    couponInput.classList.remove("success")
-  })
 
   // Function to handle item deletion
   function handleDeleteItem(e) {
@@ -944,7 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to handle price info on mobile
   function setupMobilePriceInfo() {
     // Create the modal and overlay if they don't exist
-    if (!document.querySelector(".price-modal-overlay")) {
+    if (isMobileView() && !document.querySelector(".price-modal-overlay")) {
       // Create overlay
       const overlay = document.createElement("div")
       overlay.className = "price-modal-overlay"
@@ -1044,6 +1004,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     })
+    // Limpieza del modal si ya no estamos en vista mobile
+    if (!isMobileView()) {
+      const overlay = document.querySelector(".price-modal-overlay")
+      const modal = document.querySelector(".price-modal")
+
+      if (modal && overlay) {
+        // Cerrar modal si estaba abierto
+        modal.classList.remove("open")
+        overlay.classList.remove("show")
+        document.body.classList.remove("modal-open")
+
+        // Esperar un breve instante para que se apliquen transiciones (opcional)
+        setTimeout(() => {
+          overlay.remove()
+          modal.remove()
+        }, 100) // podés ajustar este delay si tenés animaciones
+      }
+    }
   }
 
   // Function to open price modal
@@ -1120,4 +1098,107 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", () => {
     setupMobilePriceInfo()
   })
+
+  // Mobile Order Summary Toggle Functionality
+  function setupMobileOrderSummary() {
+    const mobileOrderSummary = document.querySelector(".mobile-order-summary");
+    const mobileSummaryHeader = document.querySelector(".mobile-summary-header");
+    const mobileSummaryTotal = document.querySelector(".mobile-summary-total");
+    
+    // Skip if elements don't exist
+    if (!mobileOrderSummary || !mobileSummaryHeader) return;
+    
+    // Function to update the mobile summary with data from desktop summary
+    function updateMobileSummary() {
+      // Update selected items count
+      const desktopItemCount = document.querySelector(".desktop-order-summary-container .item-count");
+      const mobileItemCount = document.querySelector(".mobile-order-summary .item-count");
+      if (desktopItemCount && mobileItemCount) {
+        mobileItemCount.textContent = desktopItemCount.textContent;
+      }
+      
+      // Update subtotal
+      const desktopSubtotal = document.querySelector(".desktop-order-summary-container .subtotal .price-value");
+      const mobileSubtotal = document.querySelector(".mobile-order-summary .subtotal .price-value");
+      if (desktopSubtotal && mobileSubtotal) {
+        mobileSubtotal.textContent = desktopSubtotal.textContent;
+      }
+      
+      // Update IVA
+      const desktopIVA = document.querySelector(".desktop-order-summary-container .IVA .price-value");
+      const mobileIVA = document.querySelector(".mobile-order-summary .IVA .price-value");
+      if (desktopIVA && mobileIVA) {
+        mobileIVA.textContent = desktopIVA.textContent;
+      }
+      
+      // Update total
+      const desktopTotal = document.querySelector(".desktop-order-summary-container .total .price-value");
+      const mobileTotal = document.querySelector(".mobile-order-summary .total .price-value");
+      if (desktopTotal && mobileTotal) {
+        mobileTotal.textContent = desktopTotal.textContent;
+        mobileSummaryTotal.textContent = desktopTotal.textContent;
+      }
+      
+      // Update checkout button text
+      const desktopCheckout = document.querySelector(".desktop-order-summary-container .checkout");
+      const mobileCheckout = document.querySelector(".mobile-order-summary .checkout");
+      if (desktopCheckout && mobileCheckout) {
+        mobileCheckout.textContent = desktopCheckout.textContent;
+      }
+    }
+    
+    // Toggle collapsed state when header is clicked
+    mobileSummaryHeader.addEventListener("click", () => {
+      mobileOrderSummary.classList.toggle("collapsed");
+    });
+    
+    // Update mobile summary whenever desktop summary changes
+    const desktopSummary = document.querySelector(".desktop-order-summary-container");
+    if (desktopSummary) {
+      const observer = new MutationObserver(updateMobileSummary);
+      observer.observe(desktopSummary, { 
+        childList: true, 
+        subtree: true,
+        characterData: true,
+        attributes: true
+      });
+    }
+    
+    // Initial update of mobile summary
+    updateMobileSummary();
+  }
+  
+  // Call the setup function
+  setupMobileOrderSummary();
+  
+  // Sync coupon functionality between desktop and mobile
+  function syncCouponFunctionality() {
+    const desktopCouponInput = document.querySelector(".desktop-order-summary-container .coupon-input input");
+    const mobileCouponInput = document.querySelector(".mobile-order-summary .coupon-input input");
+    const desktopCouponButton = document.querySelector(".desktop-order-summary-container .coupon-input button");
+    const mobileCouponButton = document.querySelector(".mobile-order-summary .coupon-input button");
+    
+    if (desktopCouponInput && mobileCouponInput) {
+      // Sync input values
+      desktopCouponInput.addEventListener("input", () => {
+        mobileCouponInput.value = desktopCouponInput.value;
+      });
+      
+      mobileCouponInput.addEventListener("input", () => {
+        desktopCouponInput.value = mobileCouponInput.value;
+      });
+      
+      // Sync button clicks
+      if (mobileCouponButton) {
+        mobileCouponButton.addEventListener("click", () => {
+          if (desktopCouponButton) {
+            desktopCouponButton.click();
+          }
+        });
+      }
+    }
+  }
+  
+  // Call the sync function
+  syncCouponFunctionality();
 })

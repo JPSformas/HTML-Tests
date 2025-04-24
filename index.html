@@ -367,8 +367,13 @@
                         </div>
                     </div>                                
                 </div>
+                <div class="cart-actions">
+                    <button class="back-link" href="#">Continuar comprando</button>
+                </div>
             </div>
-            <div class="order-summary-container">
+
+            <!-- Desktop Order Summary -->
+            <div class="desktop-order-summary-container ">
                 <div class="order-summary">
                     <h2>Resumen del pedido</h2>
                     
@@ -403,15 +408,57 @@
                     </div>
                 </div>
                 <button class="checkout">Comprar todos los productos</button>
-            </div>
-            
+            </div>  
         </div>
 
-        <div class="cart-actions">
-            <div>
-                <a href="#" class="back-link"><i class="fas fa-chevron-left"></i> Continuar comprando</a>
+      
+    
+
+        <!-- Mobile Order Summary -->
+        <div class="mobile-order-summary collapsed">
+            <div class="mobile-summary-header">
+                <h2>Resumen del pedido</h2>
+                <div class="mobile-summary-total-container">
+                    <div class="mobile-summary-total"></div>
+                    <div class="mobile-summary-toggle">
+                        <i class="fas fa-chevron-up"></i>
+                    </div>
+                </div>
             </div>
-           
+            
+            <div class="mobile-summary-content">
+                <div class="summary-item">
+                    <span>Items seleccionados:</span>
+                    <span class="item-count"></span>
+                </div>
+            
+                <hr>
+
+                <div class="summary-item subtotal">
+                    <span>Subtotal:</span>
+                    <span class="price-value"></span>
+                </div>
+                <div class="summary-item IVA">
+                    <span>Impuestos aproximados:</span>
+                    <span class="price-value"></span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total:</span>
+                    <span class="price-value"></span>
+                </div>
+
+                <hr>
+
+                <div class="coupon-section">
+                    <h4>Cupón de descuento</h4>
+                    <div class="coupon-input">
+                        <input type="text" placeholder="Ingresa aquí tu cupón">
+                        <button>Validar cupón</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="checkout">Comprar todos los productos</button>
         </div>
 
         <section class="recommended">
