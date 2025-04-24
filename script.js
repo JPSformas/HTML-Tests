@@ -1167,7 +1167,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Calculate the middle of the viewport
       const viewportMiddle = window.innerHeight / 2 
-      const triggerOffset = 200
+      const triggerOffset = 100
       const triggerPoint = viewportMiddle - triggerOffset
 
       // Check if the top of the summary is at or above the middle of the viewport
