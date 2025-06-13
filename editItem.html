@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración de Producto</title>
+  
+  <!-- Bootstrap 5 & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <link href="editItem.css" rel="stylesheet">
+  <link href="nuevo-header.css" rel="stylesheet">
+  <link href="complementos.css" rel="stylesheet">
+  <link href="sidebar.css" rel="stylesheet">
+  <link href="select-image-modal.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ==========  HEADER GLOBAL  ========== -->
+<header class="navbar navbar-dark bg-black py-3">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="https://formas.shop/app">
+      <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-height:30px">
+    </a>
+
+    <!-- Iconos derecha -->
+    <div class="d-flex align-items-center ms-auto">
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="avatar-circle d-inline-flex align-items-center justify-content-center me-2">
+                <i class="fa-solid fa-user"></i>
+              </span>
+            <span class="d-none d-md-inline userDataName">Invitado</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+            <span class="dropdown-item-text userDataName-mobile">Invitado</span>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/app/order/list">Mis pedidos</a></li>
+            <li><a class="dropdown-item" href="/app/order/repeat">Últimas compras</a></li>
+            <li><a class="dropdown-item" href="/app/order-cotization">Mis cotizaciones</a></li>
+            <li><a class="dropdown-item" href="/logout">Salir</a></li>
+        </ul>
+      </div>
+      <a href="/app/order" class="btn text-white position-relative"><i class="fas fa-cart-shopping fa-xl"></i>
+        <span class="position-absolute top-10 start-90 translate-middle  cart-count">2</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ==========  CONTENIDO PRINCIPAL  ========== -->
+<main class="container py-4">
+  <div class="d-flex justify-content-start align-items-center mb-4">
+    <a href="detalle-cotizacion.html" class="back-link">
+        <i class="fas fa-chevron-left"></i> Volver a detalle de cotización
+    </a>
+  </div>
+
+  <form>
+    <div class="card">
+      <!-- Información Básica -->
+      <div class="card-section">
+        <h1 class="h4 mb-0 fw-bold mb-4">Configuración de Producto</h1>
+        <h2 class="h5 mb-4">Información Básica</h2>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="product-image mb-3"><img src="IMG/placeholder3.jpg" alt="Gorro con logo" class="product-img" id="selectedProductImage"></div>
+            <button type="button" class="btn btn-outline-secondary w-100" id="selectImageBtn">Seleccionar imagen</button>
+          </div>
+          <div class="col-md-9">
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0"><label class="form-label">Nombre del producto + Variante</label><input type="text" class="form-control" value="Gorro Tiger - Gris claro"></div>
+              <div class="col-md-6"><label class="form-label">SKU</label><input type="text" class="form-control" value="ZEC_20037000001D55D55D63" disabled></div>
+            </div>
+            <label class="form-label">Descripción del producto</label>
+            <textarea class="form-control" rows="3">Gorro de 6 paneles realizado en Cotton Flex (microfibra). Cierre velcro tipo Shiny Soft y sticker metalizado en visera. Slazeneger</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuración de precios -->
+      <div class="card-section">
+        <h2 class="h5 mb-4">Configuración de Precios</h2>
+        <div class="mb-4">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="printOption" id="printOptionPrice" value="price" checked>
+            <label class="form-check-label" for="printOptionPrice">Con precio</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="printOption" id="printOptionNoPrice" value="noprice">
+            <label class="form-check-label" for="printOptionNoPrice">Sin precio</label>
+          </div>
+          <!-- Exclusivo Mobile -->
+          <div class="switch-container">
+            <span>Mostrar precio</span>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-md-4 mb-3 mb-md-0"><label class="form-label">PVP</label><input type="text" class="form-control form-control-sm" value="$ 9.005,00" disabled></div>
+          <div class="col-md-4 mb-3 mb-md-0"><label class="form-label">Mínimo para logo gratis</label><div class="input-with-icon"><input type="text" class="form-control form-control-sm" value="200"><button type="button" class="icon-button"><i class="fas fa-edit"></i></button></div></div>
+          <div class="col-md-4"><label class="form-label">Setup logo</label><div class="input-with-icon"><input type="text" class="form-control form-control-sm" value="$ 30.000,00"><button type="button" class="icon-button"><i class="fas fa-edit"></i></button></div></div>
+        </div>
+
+        <!-- Tabla Desktop-->
+        <div class="table-responsive mb-2">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="min-110">Cantidad</th>
+                <th class="min-110">Precio x Volumen</th>
+                <th class="min-110">SETUP Prorrateado</th>
+                <th class="min-110">Costo extra</th>
+                <th class="min-110">Margen</th>
+                <th class="min-110">Descuento</th>
+                <th class="min-110">Financiación</th>
+                <th class="min-110">Precio Unitario</th>
+                <th class="min-120">Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="colCotizacionCantidad"><input type="number" class="form-control form-control-sm" name="colCotizacionCantidad" value="100"></td>
+                <td class="colCotizacionPrecio"><input type="text" class="form-control form-control-sm" name="colCotizacionPrecio" value="$ 8.005,00" disabled></td>
+                <td class="colCotizacionSetup"><input type="text" class="form-control form-control-sm" name="colCotizacionSetup" value="$ 300,00" disabled></td>
+                <td class="colCotizacionCostoExtra"><input type="text" class="form-control form-control-sm" name="colCotizacionCostoExtra" value="$ 150,00"></td>
+                <td class="colCotizacionMargen">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionDescuento">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="descuentoGeneral" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionFinanciacion">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionPrecioUnitario"><input type="text" class="form-control form-control-sm" name="colCotizacionPrecioUnitario" value="$ 8.455,00" disabled></td>
+                <td class="colCotizacionSubtotal"><input type="text" class="form-control form-control-sm" name="colCotizacionSubtotal" value="$ 845.500,00" disabled></td>
+                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+              </tr>
+
+              <tr>
+                <td class="colCotizacionCantidad"><input type="number" class="form-control form-control-sm" value="200"></td>
+                <td class="colCotizacionPrecio"><input type="text" class="form-control form-control-sm" value="$ 7.005,00" disabled></td>
+                <td class="colCotizacionSetup"><input type="text" class="form-control form-control-sm" value="$ 150,00" disabled></td>
+                <td class="colCotizacionCostoExtra"><input type="text" class="form-control form-control-sm" value="$ 150,00"></td>
+                <td class="colCotizacionMargen">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionDescuento">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="descuentoGeneral" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionFinanciacion">
+                  <div class="input-group">
+                    <input type="number" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </td>
+                <td class="colCotizacionPrecioUnitario"><input type="text" class="form-control form-control-sm" value="$ 7.305,00" disabled></td>
+                <td class="colCotizacionSubtotal"><input type="text" class="form-control form-control-sm" value="$ 1.461.000,00" disabled></td>
+                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cards Mobile -->
+        <div class="saved-quantities mb-3">
+          <div class="quantities-card">
+            <div class="fieldLabel" >Cantidad: <span class="fieldValue">100</span></div>
+            <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 8.455,00</span></div>
+            <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 845.500,00</span></div>
+            <div class="action-buttons">
+              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+            </div>
+          </div>
+
+          <div class="quantities-card">
+            <div class="fieldLabel" >Cantidad: <span class="fieldValue">200</span></div>
+            <div class="fieldLabel" >Precio Unitario: <span class="fieldValue">$ 7.305,00</span></div>
+            <div class="fieldLabel" >Subtotal: <span class="fieldValue">$ 1.461.000,00</span></div>
+            <div class="action-buttons">
+              <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+              <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boton Desktop -->
+        <button type="button" class="btn btn-outline-secondary mb-3" style="font-size: 14px;" id="agregarCantidadDesktop"><i class="fas fa-plus"></i>Agregar cantidad</button>
+
+        <!-- Boton Mobile -->
+        <button type="button" class="btn btn-outline-secondary mt-3 w-100 d-md-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos"><i class="fas fa-plus"></i>Agregar cantidad</button>
+      </div>
+    </div>
+
+    <!-- Botones guardado -->
+    <div class="d-flex justify-content-end mt-4">
+      <a href="detalle-cotizacion.html" type="button" class="btn btn-outline-secondary me-3">Volver a la cotización "Prueba JP"</a>
+      <button type="button" class="btn btn-primary" id="saveItemCotization"><i class="fas fa-save me-2"></i>Guardar ítem de cotización</button>
+    </div>
+  </form>
+
+  <!-- Sidebar para más elementos (Mobile) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="sidebarMasElementos" aria-labelledby="sidebarMasElementosLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="sidebarMasElementosLabel">Cantidades</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="d-grid gap-2">
+        <!-- Campos -->
+        <label class="form-label d-block w-100">
+          <span>Cantidad</span> 
+          <input type="number" class="form-control form-control-sm mt-2" name="colCotizacionCantidad" min="1" value="100">
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Precio x Volumen</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecio" value="$ 8.005,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>SETUP Prorrateado</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSetup" value="$ 300,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Costo extra</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionCostoExtra" value="$ 150,00">
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Margen</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Descuento</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionDescuento" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Financiación</span>
+          <div class="input-group mt-2">
+            <input type="number" class="form-control form-control-sm" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+            <span class="input-group-text">%</span>
+          </div>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Precio Unitario</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionPrecioUnitario" value="$ 8.455,00" disabled>
+        </label>
+        <label class="form-label d-block w-100">
+          <span>Subtotal</span>
+          <input type="text" class="form-control form-control-sm mt-2" name="colCotizacionSubtotal" value="$ 845.500,00" disabled>
+        </label>   
+      </div>
+    </div>
+    <div class="offcanvas-footer">
+      <button type="button" class="btn btn-primary w-100">Guardar</button>
+    </div>
+  </div>
+
+  <!-- Image Selection Modal -->
+  <div class="modal-backdrop" id="imageModal" style="display: none;">
+    <div class="image-modal">
+      <div class="modal-header">
+        <h5>Seleccionar Imagen</h5>
+        <button type="button" class="close-btn" id="closeModalBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="image-section">
+          <h6>Imágenes subidas</h6>
+          <div class="image-grid" id="uploadedImagesGrid">
+            <!-- Uploaded images will be added here dynamically with delete buttons -->
+            <div class="upload-area">
+              <div class="upload-content">
+                <i class="fas fa-upload"></i>
+                <p>Arrastrá y soltá para agregar imágenes</p>
+                <label class="upload-btn">
+                  Examinar
+                  <input type="file" hidden id="imageUploadInput" accept="image/*" multiple>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="image-section">
+          <h6>Imágenes de producto</h6>
+          <div class="image-grid" id="productImagesGrid">
+            <div class="image-item" data-image="IMG/placeholder3SinLogoFrente.jpg" data-type="product" data-id="product-1">
+              <img src="IMG/placeholder3SinLogoFrente.jpg" alt="Product image 1">
+            </div>
+            <div class="image-item" data-image="IMG/placeholder3SinLogoLateral1.jpg" data-type="product" data-id="product-2">
+              <img src="IMG/placeholder3SinLogoLateral1.jpg" alt="Product image 2">
+            </div>
+            <div class="image-item" data-image="IMG/placeholder3SinLogoDorso.jpg" data-type="product" data-id="product-3">
+              <img src="IMG/placeholder3SinLogoDorso.jpg" alt="Product image 3">
+            </div>
+            <div class="image-item" data-image="IMG/placeholder3SinLogoLatera2.jpg" data-type="product" data-id="product-4">
+              <img src="IMG/placeholder3SinLogoLateral2.jpg" alt="Product image 3">
+            </div>
+          </div>
+        </div>
+        
+        <div class="image-section">
+          <h6>Imágenes personalizadas</h6>
+          <div class="image-grid" id="zakekeImagesGrid">
+            <div class="image-item" data-image="IMG/placeholder3.jpg" data-type="zakeke" data-id="zakeke-1">
+              <img src="IMG/placeholder3.jpg" alt="Zakeke image 1">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Undo Notification -->
+  <div class="undo-notification" id="undoNotification" style="display: none;">
+    <div class="undo-content">
+      <span>Imagen eliminada</span>
+      <button type="button" id="undoButton">Deshacer</button>
+    </div>
+  </div>
+</main>
+
+<!-- Bootstrap bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // JS basic demo
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Original functionality
+    document.getElementById('agregarCantidadDesktop').addEventListener('click', () => alert('Agregar nueva fila'));
+    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => alert('Eliminar fila')));
+    document.getElementById('saveItemCotization').addEventListener('click', () => alert('Guardado'));
+    
+    // Image storage and management
+    let lastDeletedImage = null;
+    let uploadedImages = [];
+    let currentSelectedImageUrl = document.getElementById('selectedProductImage').src;
+    
+    // Load saved images from localStorage
+    function loadSavedImages() {
+      const savedImages = sessionStorage.getItem('uploadedImages');
+      if (savedImages) {
+        uploadedImages = JSON.parse(savedImages);
+        renderUploadedImages();
+      }
+    }
+    
+    // Save images to localStorage
+    function saveImages() {
+      sessionStorage.setItem('uploadedImages', JSON.stringify(uploadedImages));
+    }
+    
+    // Render uploaded images in the grid
+    function renderUploadedImages() {
+      const uploadedImagesGrid = document.getElementById('uploadedImagesGrid');
+      
+      // Clear existing uploaded images (except the upload area)
+      const uploadArea = uploadedImagesGrid.querySelector('.upload-area');
+      uploadedImagesGrid.innerHTML = '';
+      uploadedImagesGrid.appendChild(uploadArea);
+      
+      // Add each uploaded image
+      uploadedImages.forEach((image, index) => {
+        const imageItem = document.createElement('div');
+        imageItem.className = 'image-item';
+        imageItem.setAttribute('data-image', image.url);
+        imageItem.setAttribute('data-type', 'uploaded');
+        imageItem.setAttribute('data-id', `uploaded-${index}`);
+        
+        // Check if this is the currently selected image
+        if (image.url === currentSelectedImageUrl) {
+          imageItem.classList.add('selected-image');
+        }
+        
+        const img = document.createElement('img');
+        img.src = image.url;
+        img.alt = `Uploaded image ${index + 1}`;
+        
+        // Only add delete button for uploaded images
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'image-delete-btn';
+        deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+        
+        imageItem.appendChild(img);
+        imageItem.appendChild(deleteBtn);
+        uploadedImagesGrid.appendChild(imageItem);
+        
+        // Add click event to select image
+        imageItem.addEventListener('click', (e) => {
+          if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
+            handleImageSelect(imageItem);
+          }
+        });
+        
+        // Add click event to delete button
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleImageDelete(imageItem);
+        });
+      });
+    }
+    
+    // JS for image modal
+    const selectImageBtn = document.getElementById('selectImageBtn');
+    const imageModal = document.getElementById('imageModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const selectedProductImage = document.getElementById('selectedProductImage');
+    const imageUploadInput = document.getElementById('imageUploadInput');
+    const undoNotification = document.getElementById('undoNotification');
+    const undoButton = document.getElementById('undoButton');
+    
+    // Load saved images when page loads
+    loadSavedImages();
+    
+    // Open modal
+    selectImageBtn.addEventListener('click', () => {
+      imageModal.style.display = 'flex';
+      highlightSelectedImage();
+    });
+    
+    // Close modal
+    closeModalBtn.addEventListener('click', () => {
+      imageModal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) {
+        imageModal.style.display = 'none';
+      }
+    });
+    
+    // Highlight the currently selected image in the modal
+    function highlightSelectedImage() {
+      // Remove selected class from all images
+      document.querySelectorAll('.image-item').forEach(item => {
+        item.classList.remove('selected-image');
+      });
+      
+      // Add selected class to the currently selected image
+      const currentImageUrl = selectedProductImage.src;
+      
+      document.querySelectorAll('.image-item').forEach(item => {
+        const itemImageUrl = item.getAttribute('data-image');
+        if (itemImageUrl && currentImageUrl.includes(itemImageUrl)) {
+          item.classList.add('selected-image');
+        }
+      });
+    }
+    
+    // Handle image selection
+    function handleImageSelect(imageItem) {
+      const imageUrl = imageItem.getAttribute('data-image');
+      if (imageUrl) {
+        // Update the selected image
+        selectedProductImage.src = imageUrl;
+        currentSelectedImageUrl = imageUrl;
+        
+        // Update the selected class
+        document.querySelectorAll('.image-item').forEach(item => {
+          item.classList.remove('selected-image');
+        });
+        imageItem.classList.add('selected-image');
+        
+        // Close the modal
+        imageModal.style.display = 'none';
+      }
+    }
+    
+    // Add click events to all image items for selection
+    document.querySelectorAll('.image-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        // Only select if not clicking the delete button
+        if (!e.target.classList.contains('image-delete-btn') && !e.target.closest('.image-delete-btn')) {
+          handleImageSelect(item);
+        }
+      });
+    });
+    
+    // Handle image deletion (only for uploaded images)
+    function handleImageDelete(imageItem) {
+      const imageType = imageItem.getAttribute('data-type');
+      
+      // Only allow deletion of uploaded images
+      if (imageType === 'uploaded') {
+        const imageId = imageItem.getAttribute('data-id');
+        const imageUrl = imageItem.getAttribute('data-image');
+        
+        // Store the deleted image info for potential undo
+        lastDeletedImage = {
+          id: imageId,
+          type: imageType,
+          url: imageUrl,
+          element: imageItem.cloneNode(true)
+        };
+        
+        // Remove from the array
+        const index = uploadedImages.findIndex(img => img.url === imageUrl);
+        if (index !== -1) {
+          uploadedImages.splice(index, 1);
+          saveImages();
+        }
+        
+        // Remove the image from the DOM
+        imageItem.remove();
+        
+        // Show the undo notification
+        showUndoNotification();
+      }
+    }
+    
+    // Show undo notification
+    function showUndoNotification() {
+      undoNotification.style.display = 'block';
+      
+      // Auto-hide after 5 seconds
+      setTimeout(() => {
+        if (undoNotification.style.display === 'block') {
+          undoNotification.style.display = 'none';
+          lastDeletedImage = null;
+        }
+      }, 5000);
+    }
+    
+    // Handle undo button click
+    undoButton.addEventListener('click', () => {
+      if (lastDeletedImage && lastDeletedImage.type === 'uploaded') {
+        // Add it back to the array
+        uploadedImages.push({ url: lastDeletedImage.url });
+        saveImages();
+        renderUploadedImages();
+        
+        // Hide the notification
+        undoNotification.style.display = 'none';
+        lastDeletedImage = null;
+      }
+    });
+    
+    // Handle file upload for multiple files
+    imageUploadInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        // Create an array to store all new images
+        const newImages = [];
+        
+        // Process each file
+        const totalFiles = e.target.files.length;
+        let processedFiles = 0;
+        
+        Array.from(e.target.files).forEach(file => {
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const imageUrl = event.target.result;
+              
+              // Add to our temporary array
+              newImages.push({ url: imageUrl });
+              
+              // Increment processed files counter
+              processedFiles++;
+              
+              // When all files are processed, update the main array and render
+              if (processedFiles === totalFiles) {
+                // Add all new images to the uploaded images array
+                uploadedImages = [...uploadedImages, ...newImages];
+                
+                // Save all at once
+                saveImages();
+                
+                // Render the updated list
+                renderUploadedImages();
+              }
+            };
+            reader.readAsDataURL(file);
+          } else {
+            // If not an image, increment counter but don't add to array
+            processedFiles++;
+          }
+        });
+      }
+    });
+    
+    // Drag and drop functionality
+    const uploadArea = document.querySelector('.upload-area');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight() {
+      uploadArea.classList.add('highlight');
+    }
+
+    function unhighlight() {
+      uploadArea.classList.remove('highlight');
+    }
+
+    // Handle dropped files (multiple)
+    uploadArea.addEventListener('drop', handleDrop, false);
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      
+      if (files && files.length > 0) {
+        // Create an array to store all new images
+        const newImages = [];
+        
+        // Process each file
+        const totalFiles = files.length;
+        let processedFiles = 0;
+        
+        Array.from(files).forEach(file => {
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              const imageUrl = event.target.result;
+              
+              // Add to our temporary array
+              newImages.push({ url: imageUrl });
+              
+              // Increment processed files counter
+              processedFiles++;
+              
+              // When all files are processed, update the main array and render
+              if (processedFiles === totalFiles) {
+                // Add all new images to the uploaded images array
+                uploadedImages = [...uploadedImages, ...newImages];
+                
+                // Save all at once
+                saveImages();
+                
+                // Render the updated list
+                renderUploadedImages();
+              }
+            };
+            reader.readAsDataURL(file);
+          } else {
+            // If not an image, increment counter but don't add to array
+            processedFiles++;
+          }
+        });
+      }
+    }
+  });
+</script>
+</body>
+</html>

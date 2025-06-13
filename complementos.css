@@ -1,0 +1,220 @@
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 100px;
+}
+
+.btn-primary {
+  background-color: #222;
+  border-color: #222;
+  border-radius: 8px;
+}
+
+.btn-primary:hover {
+  background-color: white;
+  border-color: #222;
+  color: #222;
+}
+
+.btn-outline-primary {
+  color: #222;
+  border-color: #222;
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+  background-color: #222;
+  border-color: #222;
+  color: white;
+}
+
+.btn-outline-secondary {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.btn-outline-secondary i {
+  margin-right: 10px
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  color: #555;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  color: #333;
+}
+
+.back-link i {
+  margin-right: 8px;
+}
+
+.edit-btn {
+  color: #555;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
+
+.delete-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: #fff;
+  border: none;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: #ff4d4f;
+  transform: scale(1.1);
+}
+
+.edit-btn-mobile, 
+.delete-btn-mobile {
+  display: none;
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+  color: #666;
+}
+
+.delete-btn-mobile {
+  color:#ff4d4f
+}
+.checkItem {
+  align-content: center;
+  user-select: none;
+  padding: 0 0.75rem;
+}
+/* Styles for drag and drop functionality */
+.dragItem {
+  align-content: center;
+  user-select: none;
+}
+
+.dragItem span {
+  color: #b4b4b4;
+  cursor: grab;
+}
+
+.dragItem span:hover {
+  color: #666;
+  cursor: grab;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+}
+
+.dragItem span:active {
+  cursor: grabbing;
+}
+
+.sortable-ghost {
+  opacity: 0.4;
+  background-color: #f0f0f0;
+}
+
+.sortable-chosen {
+  background-color: #f9f9f9;
+}
+
+.sortable-drag {
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
+}
+
+/* Estilos para el switch en mobile */
+.switch-container {
+  display: none;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+@media (max-width: 767.98px) {
+    
+    .switch-container{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+
+    .edit-btn {
+        display: none;
+    }
+
+}
