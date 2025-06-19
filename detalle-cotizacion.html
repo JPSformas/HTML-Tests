@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cotizaciones</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=drag_indicator" />
+    
+    <link href="nuevo-header.css" rel="stylesheet">
+    <link href="complementos.css" rel="stylesheet">
+    <link href="sidebar.css" rel="stylesheet">
+    <link href="select-image-modal.css" rel="stylesheet">
+    <link href="detalle-cotizacion.css" rel="stylesheet">
+</head>
+<body>
+    <!-- ==========  HEADER GLOBAL  ========== -->
+    <header class="navbar navbar-dark bg-black py-3">
+        <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="https://formas.shop/app">
+            <img src="IMG/Logo Formas.shop 2025-02.png" alt="Logo" style="max-height:30px">
+        </a>
+    
+        <!-- Iconos derecha -->
+        <div class="d-flex align-items-center ms-auto">
+            <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar-circle d-inline-flex align-items-center justify-content-center me-2">
+                    <i class="fa-solid fa-user"></i>
+                    </span>
+                <span class="d-none d-md-inline userDataName">Invitado</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                <span class="dropdown-item-text userDataName-mobile">Invitado</span>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/app/order/list">Mis pedidos</a></li>
+                <li><a class="dropdown-item" href="/app/order/repeat">Últimas compras</a></li>
+                <li><a class="dropdown-item" href="/app/order-cotization">Mis cotizaciones</a></li>
+                <li><a class="dropdown-item" href="/logout">Salir</a></li>
+            </ul>
+            </div>
+            <a href="" class="btn text-white position-relative"><i class="fas fa-cart-shopping fa-xl"></i>
+                <span class="position-absolute top-10 start-90 translate-middle  cart-count">2</span>
+            </a>
+        </div>
+        </div>
+    </header>
+    <main class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="#" class="back-link">
+                <i class="fas fa-chevron-left"></i> Volver a mis cotizaciones
+            </a>
+            <div>
+                <button type="button" class="btn btn-outline-secondary me-2 d-none guardarCotizacion" data-cotization="#">
+                    Guardar cotización
+                </button>
+                <a class="btn btn-primary generarCotizacion" data-cotization="#" href="#">
+                    Generar PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- ==========  CONTENIDO PRINCIPAL  ========== -->
+        <div class="card">
+            <div class="card-section">
+                <h1 class="h4 mb-0 fw-bold mb-4">Cotización</h1>
+                <!-- Estructura con grid 2x2 en cada columna -->
+                <div class="row mb-5">
+                    <!-- Columna izquierda -->
+                    <div class="col-md-6 pe-md-4 border-end">
+                        <div class="row mb-0 mb-md-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="cotizationName" class="form-label">Nombre de cotización</label>
+                                <input type="text" id="cotizationName" name="cotizationName" class="form-control" value="Prueba JP">
+                            </div>
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="dateFrom" class="form-label">Fecha</label>
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" value="07/04/2025" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="nombreApellido" class="form-label">Nombre y Apellido</label>
+                                <input type="text" id="nombreApellido" name="nombreApellido" class="form-control" value="">
+                            </div>
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="razonSocial" class="form-label">Razón Social</label>
+                                <input type="text" id="razonSocial" name="razonSocial" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha-->
+                    <div class="col-md-6 ps-md-4">
+                        <div class="row mb-0 mb-md-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="configPreciosSelect" class="form-label">Configuración de precios</label>
+                                <select class="form-select" id="configPreciosSelect">
+                                    <option value="conPrecio" selected>Con precio</option>
+                                    <option value="sinPrecio">Sin precio</option>
+                                    <option value="sinPrecio&Stock">Sin precio con stock</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="precioExtraImpresion" class="form-label">Costo extra impresión</label>
+                                <input type="text" class="form-control" id="precioExtraImpresion" name="precioExtraImpresion" value="30000">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <label for="descuentoGeneral" class="form-label">Descuento general</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="descuentoGeneral" name="descuentoGeneral" placeholder="0" inputmode="numeric">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <!-- Botón para desktop -->
+                                <button type="button" class="btn btn-outline-secondary w-100 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#modalMasElementos">
+                                    <i class="fas fa-plus"></i>Más elementos
+                                </button>
+                                <!-- Botón para mobile -->
+                                <button type="button" class="btn btn-outline-secondary w-100 d-md-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMasElementos">
+                                    <i class="fas fa-plus"></i>Más elementos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="table-title">Productos</div>
+                    <div class="dropdown">
+                        <button class=" btn btn-outline-secondary d-flex align-items-center dropdown-toggle" type="button" id="dropdownAgregarProductos" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="d-inline ">Agregar producto</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAgregarProductos">
+                            <li class="dropdown-item option text-decoration-none" id="agregarProductoDesktop" data-bs-toggle="modal" data-bs-target="#modalProductoImportado">
+                                Producto importado
+                            </li>
+                            <li class="dropdown-item option text-decoration-none" id="agregarProductoDesktop" data-bs-toggle="modal" data-bs-target="#modalAgregarProductosPIC">
+                                Producto genérico
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="table-responsive mb-4">
+                    <table class="table">
+                        <tbody>
+                            <tr id="item-1" class="item-container" data-id="#">
+                                <td class="dragItem">
+                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="product-image mx-auto">
+                                        <img src="IMG/placeholder3.jpg" alt="Gorro Roger" class="product-img">
+                                    </div>
+                                </td>
+                                <td class="productName">
+                                    Gorro Tiger - Gris claro
+                                </td>
+                                <td class="productDescription">
+                                    <p>Gorro de 6 paneles realizado en Cotton Flex (microfibra). Cierre velcro tipo Shiny Soft y sticker metalizado en visera. Slazeneger</p>
+                                </td>
+                                <td class="productQuantities">
+                                    <div class="quantities-tag">x50</div> 
+                                    <div class="quantities-tag">x100</div>
+                                    <div class="quantities-tag">x200</div>
+                                    <div class="quantities-tag">x500</div>
+                                    <div class="quantities-tag">x1000</div>
+                                </td>
+                                <td>
+                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit"></i></a>
+                                    <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
+                                    <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                                </td>
+                                <td>
+                                    <button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr id="item-2" class="item-container" data-id="#">
+                                <td class="dragItem">
+                                    <span class="material-symbols-outlined">drag_indicator</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="product-image mx-auto">
+                                        <img src="IMG/placeholder.jpg" alt="Gorro Roger" class="product-img">
+                                    </div>
+                                </td>
+                                <td class="productName">
+                                    Herschel Classic Backpack
+                                </td>
+                                <td class="productDescription">
+                                    <p>Classic
+                                        <br>
+                                        Es clásica por un motivo: es minimalista y versátil, ideal para usar todos los días. Capacidad de 20 litros.
+                                        <br>
+                                        Cuenta con un bolsillo delantero y en su compartimento principal, con una funda interior que se adapta a una laptop de 14"
+                                        <br>
+                                        Tiene cierres con tiradores de cordón y correas acolchadas ajustables para los hombros.
+                                        <br>
+                                        Material: Poliéster 600D reciclado, está elaborado con botellas de agua usadas recuperadas. Todos los  materiales reciclados de los productos Herschel pertenecen a la marca registrada EcoSystem™ 
+                                    </p>
+                                </td>
+                                <td class="productQuantities">
+                                    <div class="quantities-tag">x50</div> 
+                                    <div class="quantities-tag">x100</div>
+                                    <div class="quantities-tag">x200</div>
+                                    <div class="quantities-tag">x500</div>
+                                    <div class="quantities-tag">x1000</div>
+                                </td>
+                                <td>
+                                    <a href="editItem.html" class="edit-btn" data-itemid="#"><i class="fas fa-edit"></i></a>
+                                    <a href="editItem.html" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></a>
+                                    <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                                </td>
+                                <td><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row px-3 mb-4">
+                    <label for="areaObservaciones" class="form-label">Observaciones de la cotización</label>
+                    <textarea class="form-control" id="areaObservaciones">Los valores mencionados no incluyen IVA. Validez del presupuesto: 72 hs. Condición de pago: Transferencia</textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Más Elementos Desktop-->
+    <div class="modal fade" id="modalMasElementos" tabindex="-1" aria-labelledby="modalMasElementosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMasElementosLabel">Elementos adicionales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Tabla -->
+                    <div class="table-responsive mb-2">
+                        <table class="table table-modal">
+                            <thead><tr><th style="width: 180px; min-width: 110px">Cantidad</th><th style="width: 180px; min-width: 110px">Costo extra</th><th style="width: 180px; min-width: 110px">Margen</th><th style="width: 180px; min-width: 110px">Financiación</th><th></th></tr></thead>
+                            <tbody>
+                            <tr>
+                                <td class="colCotizacionCantidad"><input type="number" class="form-control form-control-sm" name="colCotizacionCantidad" value="50"></td>
+                                <td class="colCotizacionCostoExtra"><input type="text" class="form-control form-control-sm" name="colCotizacionCostoExtra"></td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td class="colCotizacionCantidad"><input type="number" class="form-control form-control-sm" name="colCotizacionCantidad" value="100"></td>
+                                <td class="colCotizacionCostoExtra"><input type="text" class="form-control form-control-sm" name="colCotizacionCostoExtra"></td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td class="colCotizacionCantidad"><input type="number" class="form-control form-control-sm" name="colCotizacionCantidad" value="200"></td>
+                                <td class="colCotizacionCostoExtra"><input type="text" class="form-control form-control-sm" name="colCotizacionCostoExtra"></td>
+                                <td class="colCotizacionMargen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="colCotizacionFinanciacion">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle"><button type="button" class="delete-btn"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary mb-2" style="font-size: 14px;" id="agregarCantidadDesktop"><i class="fas fa-plus"></i>Agregar cantidad</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar para Más Elementos (Mobile) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sidebarMasElementos" aria-labelledby="sidebarMasElementosLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMasElementosLabel">Elementos Adicionales</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="d-grid gap-2">
+                <button class="btn btn-outline-secondary mb-2" type="button" id="btnAgregarCantidades">
+                    Agregar cantidades
+                </button>
+                <div class="saved-quantities mb-3">
+                    <div class="quantities-card">
+                        <div class="fieldLabel" >Cantidad: <span class="fieldValue">50</span></div>
+                        <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                        <div class="action-buttons">
+                        <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                        <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                        </div>
+                    </div>
+                    <div class="quantities-card">
+                        <div class="fieldLabel" >Cantidad: <span class="fieldValue">100</span></div>
+                        <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                        <div class="action-buttons">
+                        <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                        <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                        </div>
+                    </div>
+                    <div class="quantities-card">
+                        <div class="fieldLabel" >Cantidad: <span class="fieldValue">200</span></div>
+                        <div class="fieldLabel" >Costo extra: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Margen: <span class="fieldValue"></span></div>
+                        <div class="fieldLabel" >Financiación: <span class="fieldValue"></span></div>
+                        <div class="action-buttons">
+                        <button href="" class="edit-btn-mobile" data-itemid="#"><span>Editar</span></button>
+                        <button type="button" class="delete-btn-mobile"><span>Eliminar</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar anidado para Agregar Cantidades -->
+            <div class="nested-sidebar" id="nestedSidebar">
+                <div class="nested-sidebar-header">
+                    <button type="button" class="btn-back" id="btnBackNestedSidebar">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h5>Agregar cantidades</h5>
+                </div>
+                <div class="nested-sidebar-body">
+                    <!-- Campos adicionales -->
+                    <label class="form-label d-block w-100">
+                        <span>Cantidad</span> 
+                        <input type="number" class="form-control mt-2" name="colCotizacionCantidad" min="1" >
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Costo extra</span>
+                        <input type="text" class="form-control mt-2" name="colCotizacionCostoExtra">
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Margen</span>
+                        <div class="input-group mt-2">
+                            <input type="number" class="form-control" name="colCotizacionMargen" placeholder="0" inputmode="numeric">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </label>
+                    <label class="form-label d-block w-100">
+                        <span>Financiación</span>
+                        <div class="input-group mt-2">
+                            <input type="number" class="form-control" name="colCotizacionFinanciacion" placeholder="0" inputmode="numeric">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </label>
+                </div>
+                <div class="nested-sidebar-footer">
+                    <button type="button" class="btn btn-primary w-100">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar producto PIC-->
+    <div class="modal fade" id="modalAgregarProductosPIC" tabindex="-1" aria-labelledby="modalAgregarProductosPICLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarProductosPICLabel">Nuevo Producto Genérico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- ===== Información básica del producto ===== -->
+                        <div class="col-md-6">
+                            <label class="form-label" for="PICProductName">Producto*</label>
+                            <input type="text" class="form-control" id="PICProductName" name="productName" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="newProductCategory">Categoría</label>
+                            <select class="form-select" required id="newProductCategory">
+                                <option value="" disabled selected>Seleciona una categoría</option>
+                                <option value="Antiestres">Antiestrés</option>
+                                <option value="Drinkware">Drinkware</option>
+                                <option value="Escritura">Escritura</option>
+                                <option value="Grafico&Institucional">Gráfico & Institucional</option>
+                                <option value="Health&Beauty">Health & Beauty</option>
+                                <option value="Hogar&TiempoLibre">Hogar & Tiempo libre</option>
+                                <option value="Llaveros">Llaveros</option>
+                                <option value="Marroquineria">Marroquinería</option>
+                                <option value="Oficina">Oficina</option>
+                                <option value="Tecnologia">Tecnología</option>
+                                <option value="Textil">Textil</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-sm">
+                            <label class="form-label" for="PICDescription">Descripción</label>
+                            <textarea class="form-control" id="PICDescription" name="description" rows="3" spellcheck="true"></textarea>
+                        </div>
+                    </div>
+                    <div class="image-section py-3 my-3" style="border-top: 1px solid #eee; border-bottom: 1px solid #eee">
+                        <div class="image-grid" id="uploadedImagesGrid">
+                        <!-- Uploaded images will be added here dynamically with delete buttons -->
+                        <div class="upload-area">
+                            <div class="upload-content">
+                            <i class="fas fa-upload"></i>
+                            <p>Arrastrá y soltá para agregar imágenes</p>
+                            <label class="upload-btn">
+                                Examinar
+                                <input type="file" hidden id="imageUploadInput" accept="image/*" multiple>
+                            </label>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="PICProductQuantity">Cantidades</label>
+                            <div id="quantitiesContainer" class="d-grid gap-2 mb-2"></div>
+                            <button type="button" onclick="addQuantity()" class="btn btn-outline-secondary mb-3 w-100" style="font-size: 14px;"><i class="fas fa-plus"></i>Agregar cantidad</button>     
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="PICPrice">Precio Unitario</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="PICPrice" name="PICPrice" placeholder="PVP / Costo">
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="PICSubtotal">Subtotal</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="PICSubtotal" name="PICSubtotal" disabled>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Producto Importado -->
+    <div class="modal fade" id="modalProductoImportado" tabindex="-1" aria-labelledby="modalProductoImportadoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProductoImportadoLabel">
+                        Seleccionar Productos Importados
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Search Bar -->
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="productSearch" placeholder="Buscar productos por nombre, SKU o descripción...">
+                        </div>
+                    </div>
+                    
+                    <!-- Search Placeholder (when no search is performed) -->
+                    <div class="search-placeholder" id="searchPlaceholder">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <p>Ingresa un término de búsqueda para encontrar productos</p>
+                    </div>
+                    
+                    <!-- Search Results -->
+                    <div class="search-results" id="searchResults" style="display: none;">
+                        <!-- Products will be populated here -->
+                    </div>
+                    
+                    <!-- No Results Message -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <i class="fas fa-search fa-2x mb-3"></i>
+                        <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="addSelectedProducts" disabled>
+                        Agregar Productos Seleccionados
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Configuración del sidebar anidado
+            const btnAgregarCantidades = document.getElementById('btnAgregarCantidades');
+            const nestedSidebar = document.getElementById('nestedSidebar');
+            const btnBackNestedSidebar = document.getElementById('btnBackNestedSidebar');
+            const mainSidebar = document.getElementById('sidebarMasElementos');
+          
+                   
+            if (btnAgregarCantidades && nestedSidebar && btnBackNestedSidebar) {
+                // Mostrar el sidebar anidado
+                btnAgregarCantidades.addEventListener('click', function() {
+                    nestedSidebar.classList.add('show');
+                });
+                
+                // Ocultar el sidebar anidado
+                btnBackNestedSidebar.addEventListener('click', function() {
+                    nestedSidebar.classList.remove('show');
+                });
+            }
+
+            if (mainSidebar && nestedSidebar) {
+                mainSidebar.addEventListener('hidden.bs.offcanvas', () => {
+                    nestedSidebar.classList.remove('show');
+                });
+            }
+
+            initializeDragAndDrop();
+
+        });
+
+        function initializeDragAndDrop() {
+            const tableBody = document.querySelector('table tbody');
+            
+            if (!tableBody) {
+                console.warn('Table body not found');
+                return;
+            }
+
+            const sortable = Sortable.create(tableBody, {
+                animation: 200,
+                handle: '.dragItem',
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                
+                onStart: function(evt) {
+                    console.log('Drag started');
+                    document.body.style.cursor = 'grabbing';
+                },
+                
+                onEnd: function(evt) {
+                    console.log('Item moved from index', evt.oldIndex, 'to', evt.newIndex);
+                    document.body.style.cursor = '';
+                    updateItemIds();
+                    saveNewOrder();
+                }
+            });
+
+            addDragHandleFeedback();
+        }
+
+        function addDragHandleFeedback() {
+            const dragHandles = document.querySelectorAll('.dragItem span');
+            
+            dragHandles.forEach(handle => {
+                handle.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                
+                handle.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        }
+
+        function updateItemIds() {
+            const rows = document.querySelectorAll('.item-container');
+            
+            rows.forEach((row, index) => {
+                row.id = `item-${index + 1}`;
+            });
+        }
+
+        function saveNewOrder() {
+            const rows = document.querySelectorAll('.item-container');
+            const order = [];
+            
+            rows.forEach((row, index) => {
+                order.push({
+                    id: row.getAttribute('data-id'),
+                    position: index + 1,
+                    productName: row.querySelector('.productName').textContent.trim()
+                });
+            });
+            
+            localStorage.setItem('itemOrder', JSON.stringify(order));
+            console.log('New order saved:', order);
+        }
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Image storage and management
+        let uploadedImages = []
+        let selectedMainImageUrl = null
+
+        // DOM Elements
+        const uploadedImagesGrid = document.getElementById("uploadedImagesGrid")
+        const imageUploadInput = document.getElementById("imageUploadInput")
+        const uploadArea = document.querySelector(".upload-area")
+        const saveChangesBtn = document.querySelector(".modal-footer .btn-primary")
+
+        // Load saved images from sessionStorage
+        function loadSavedImages() {
+        const savedImages = sessionStorage.getItem("uploadedImages")
+        if (savedImages) {
+            uploadedImages = JSON.parse(savedImages)
+            renderUploadedImages()
+        }
+
+        // Load selected main image
+        const mainImage = sessionStorage.getItem("selectedMainImageUrl")
+        if (mainImage) {
+            selectedMainImageUrl = mainImage
+            updateMainImageInTable(selectedMainImageUrl)
+        }
+        }
+
+        // Save images to sessionStorage
+        function saveImages() {
+        sessionStorage.setItem("uploadedImages", JSON.stringify(uploadedImages))
+        if (selectedMainImageUrl) {
+            sessionStorage.setItem("selectedMainImageUrl", selectedMainImageUrl)
+        }
+        }
+
+        // Render uploaded images in the grid
+        function renderUploadedImages() {
+        // Clear existing uploaded images (except the upload area)
+        const uploadArea = uploadedImagesGrid.querySelector(".upload-area")
+        uploadedImagesGrid.innerHTML = ""
+        uploadedImagesGrid.appendChild(uploadArea)
+
+        // Add each uploaded image
+        uploadedImages.forEach((image, index) => {
+            const imageItem = document.createElement("div")
+            imageItem.className = "image-item"
+            imageItem.setAttribute("data-image", image.url)
+            imageItem.setAttribute("data-id", `uploaded-${index}`)
+
+            // Check if this is the currently selected image
+            if (image.url === selectedMainImageUrl) {
+            imageItem.classList.add("selected-image")
+            }
+
+            const img = document.createElement("img")
+            img.src = image.url
+            img.alt = `Uploaded image ${index + 1}`
+
+            // Add delete button
+            const deleteBtn = document.createElement("button")
+            deleteBtn.className = "image-delete-btn"
+            deleteBtn.innerHTML = '<i class="far fa-trash-alt"></i>'
+
+            imageItem.appendChild(img)
+            imageItem.appendChild(deleteBtn)
+            uploadedImagesGrid.appendChild(imageItem)
+
+            // Add click event to select image
+            imageItem.addEventListener("click", (e) => {
+            if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
+                handleImageSelect(imageItem)
+            }
+            })
+
+            // Add click event to delete button
+            deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            handleImageDelete(imageItem)
+            })
+        })
+        }
+
+        // Handle image selection
+        function handleImageSelect(imageItem) {
+        const imageUrl = imageItem.getAttribute("data-image")
+        if (imageUrl) {
+            // Update the selected image
+            selectedMainImageUrl = imageUrl
+
+            // Update the selected class
+            document.querySelectorAll(".image-item").forEach((item) => {
+            item.classList.remove("selected-image")
+            })
+            imageItem.classList.add("selected-image")
+        }
+        }
+
+        // Handle image deletion
+        function handleImageDelete(imageItem) {
+        const imageUrl = imageItem.getAttribute("data-image")
+
+        // Remove from the array
+        const index = uploadedImages.findIndex((img) => img.url === imageUrl)
+        if (index !== -1) {
+            uploadedImages.splice(index, 1)
+            saveImages()
+        }
+
+        // If the deleted image was the selected main image, clear the selection
+        if (imageUrl === selectedMainImageUrl) {
+            selectedMainImageUrl = null
+            sessionStorage.removeItem("selectedMainImageUrl")
+        }
+
+        // Remove the image from the DOM
+        imageItem.remove()
+        }
+
+        // Update the main image in the table
+        function updateMainImageInTable(imageUrl) {
+        if (!imageUrl) return
+
+        // Find the currently active row (you might need to adjust this selector)
+        const activeRow = document.querySelector(".item-container.active") || document.querySelector(".item-container")
+
+        if (activeRow) {
+            const productImg = activeRow.querySelector(".product-img")
+            if (productImg) {
+            productImg.src = imageUrl
+            }
+        }
+        }
+
+        // Handle file upload for multiple files
+        imageUploadInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            handleFiles(Array.from(e.target.files))
+            imageUploadInput.value = '';
+        }
+        })
+
+        // Process multiple files
+        function handleFiles(files) {
+        // Create an array to store all new images
+        const newImages = []
+
+        // Process each file
+        const totalFiles = files.length
+        let processedFiles = 0
+
+        files.forEach((file) => {
+            if (file.type.startsWith("image/")) {
+            const reader = new FileReader()
+            reader.onload = (event) => {
+                const imageUrl = event.target.result
+
+                // Add to our temporary array
+                newImages.push({ url: imageUrl })
+
+                // Increment processed files counter
+                processedFiles++
+
+                // When all files are processed, update the main array and render
+                if (processedFiles === totalFiles) {
+                // Add all new images to the uploaded images array
+                uploadedImages = [...uploadedImages, ...newImages]
+
+                // Save all at once
+                saveImages()
+
+                // Render the updated list
+                renderUploadedImages()
+                }
+            }
+            reader.readAsDataURL(file)
+            } else {
+            // If not an image, increment counter but don't add to array
+                processedFiles++
+            }
+        })
+        }
+        // Drag and drop functionality
+
+        // Prevent default drag behaviors
+        ;["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+            uploadArea.addEventListener(eventName, preventDefaults, false)
+        })
+
+        function preventDefaults(e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
+        // Highlight drop area when item is dragged over it
+        ;["dragenter", "dragover"].forEach((eventName) => {
+            uploadArea.addEventListener(eventName, highlight, false)
+        })
+        ;["dragleave", "drop"].forEach((eventName) => {
+            uploadArea.addEventListener(eventName, unhighlight, false)
+        })
+
+        function highlight() {
+            uploadArea.classList.add("highlight")
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove("highlight")
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener("drop", handleDrop, false)
+
+        function handleDrop(e) {
+        const dt = e.dataTransfer
+        const files = dt.files
+
+        if (files && files.length > 0) {
+            handleFiles(Array.from(files))
+        }
+        }
+        
+        // Clipboard paste functionality
+        document.addEventListener('paste', handlePaste, false);
+
+        function handlePaste(e) {
+            // Only handle paste events when the modal is open
+            const modal = document.getElementById('modalAgregarProductosPIC');
+            const isModalOpen = modal && modal.classList.contains('show');
+            
+            if (!isModalOpen) return;
+            
+            const clipboardData = e.clipboardData || window.clipboardData;
+            const items = clipboardData.items;
+            
+            if (!items) return;
+            
+            const imageFiles = [];
+            
+            // Check all clipboard items for images
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                
+                // Check if the item is an image
+                if (item.type.indexOf('image') !== -1) {
+                    const file = item.getAsFile();
+                    if (file) {
+                        imageFiles.push(file);
+                    }
+                }
+            }
+            
+            // If we found images, process them
+            if (imageFiles.length > 0) {
+                e.preventDefault(); // Prevent default paste behavior
+                handleFiles(imageFiles);
+            }
+        }
+
+        // Save changes button click handler
+        saveChangesBtn.addEventListener("click", () => {
+        // Update the main image in the table
+        updateMainImageInTable(selectedMainImageUrl)
+
+        // Close the modal
+        const modalElement = document.getElementById("modalAgregarProductosPIC")
+        const modal = bootstrap.Modal.getInstance(modalElement)
+        modal.hide()
+        })
+
+        // Load saved images when page loads
+        loadSavedImages()
+    })
+
+    </script>
+    
+    <script>
+        let quantities = [0];
+
+        function renderQuantities() {
+            const container = document.getElementById('quantitiesContainer');
+            container.innerHTML = '';
+
+            quantities.forEach((qty, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'input-group';
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'form-control';
+            input.id = 'PICProductQuantity';
+            input.required = true;
+            input.value = qty;
+            input.oninput = (e) => updateQuantity(index, parseInt(e.target.value) || 0);
+
+            wrapper.appendChild(input);
+
+            if (quantities.length > 1) {
+                const buttonWrapper = document.createElement('span');
+                buttonWrapper.className = 'input-group-text p-2';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'delete-btn';
+                removeBtn.innerHTML = '<i class="far fa-trash-alt"></i>';
+                removeBtn.onclick = () => removeQuantity(index);
+
+                buttonWrapper.appendChild(removeBtn);
+                wrapper.appendChild(buttonWrapper);
+            }
+
+            container.appendChild(wrapper);
+            });
+        }
+
+        function updateQuantity(index, value) {
+            quantities[index] = value;
+        }
+
+        function addQuantity() {
+            quantities.push(0);
+            renderQuantities();
+        }
+
+        function removeQuantity(index) {
+            quantities.splice(index, 1);
+            renderQuantities();
+        }
+
+        // Inicializar al cargar
+        renderQuantities();
+    </script>
+
+    <script>
+        // Define the already added products (SKUs)
+        const alreadyAddedProducts = [
+            "ZEC_20037000001D55D55D63", // Gorro Tiger
+            "IMP_P21.100.03"            // Herschel Classic Backpack
+        ];
+
+        let productsData = [];
+        let selectedProducts = new Set();
+        let filteredProducts = [];
+        let hasSearched = false;
+
+        // DOM Elements
+        const searchInput = document.getElementById('productSearch');
+        const searchResults = document.getElementById('searchResults');
+        const searchPlaceholder = document.getElementById('searchPlaceholder');
+        const noResults = document.getElementById('noResults');
+        const addButton = document.getElementById('addSelectedProducts');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products data from JSON file
+            fetch('products-data.json')
+                .then(response => response.json())
+                .then(data => {
+                    productsData = data;
+                    setupEventListeners();
+                })
+                .catch(error => {
+                    console.error('Error loading products data:', error);
+                });
+        });
+
+        function setupEventListeners() {
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query === '') {
+                    // If search is cleared, show placeholder and hide results
+                    searchPlaceholder.style.display = 'block';
+                    searchResults.style.display = 'none';
+                    noResults.style.display = 'none';
+                    hasSearched = false;
+                } else {
+                    // Filter products based on search query
+                    filteredProducts = productsData.filter(product => 
+                        product.Nombre.toLowerCase().includes(query) ||
+                        product.SKU.toLowerCase().includes(query) ||
+                        product.Descripcion.toLowerCase().includes(query) ||
+                        (product.Categorias && product.Categorias.toLowerCase().includes(query))
+                    );
+                    
+                    hasSearched = true;
+                    renderProducts(filteredProducts);
+                }
+            });
+
+            // Add selected products button
+            addButton.addEventListener('click', function() {
+                if (selectedProducts.size > 0) {
+                    // Here you would typically add the selected products to your main table
+                    const selectedProductsData = productsData.filter(product => 
+                        selectedProducts.has(product.SKU)
+                    );
+                    
+                    console.log('Adding selected products:', selectedProductsData);
+                    
+                    // Show success message (you can customize this)
+                    alert(`Se agregaron ${selectedProducts.size} producto(s) a la cotización.`);
+                    
+                    // Reset and close modal
+                    resetModal();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProductoImportado'));
+                    modal.hide();
+                }
+            });
+
+            // Reset modal when closed
+            document.getElementById('modalProductoImportado').addEventListener('hidden.bs.modal', function() {
+                resetModal();
+            });
+        }
+
+        function renderProducts(products) {
+            if (products.length === 0 && hasSearched) {
+                searchPlaceholder.style.display = 'none';
+                searchResults.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            searchPlaceholder.style.display = 'none';
+            searchResults.style.display = 'block';
+            noResults.style.display = 'none';
+
+            searchResults.innerHTML = products.map(product => {
+                const isAlreadyAdded = alreadyAddedProducts.includes(product.SKU);
+                const isSelected = selectedProducts.has(product.SKU);
+
+                return `
+                    <div class="product-search-item ${isSelected ? 'selected' : ''} ${isAlreadyAdded ? 'already-added' : ''}" 
+                         data-product-id="${product.SKU}">
+                        ${isAlreadyAdded ? '<span class="already-added-badge">Ya agregado</span>' : ''}
+                        <div class="d-flex align-items-center">
+                            ${!isAlreadyAdded ? `
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" 
+                                           id="product-${product.SKU}" 
+                                           ${isSelected ? 'checked' : ''}
+                                           ${isAlreadyAdded ? 'disabled' : ''}
+                                           onchange="toggleProduct('${product.SKU}')">
+                                </div>
+                            ` : ''}
+                            <div class="me-3">
+                                <img src="${product.Imagen}" alt="${product.Nombre}" class="product-image-small">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="product-name">${product.Nombre}</div>
+                                <div class="product-sku">SKU: ${product.SKU}</div>
+                                <div class="mt-2">
+                                    <div class="product-stock">Stock disponible: ${product.Stock}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers to product items
+            document.querySelectorAll('.product-search-item:not(.already-added)').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on checkbox
+                    if (e.target.type === 'checkbox') return;
+                    
+                    const productId = this.dataset.productId;
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    
+                    // Only toggle if not already added
+                    if (!alreadyAddedProducts.includes(productId)) {
+                        checkbox.checked = !checkbox.checked;
+                        toggleProduct(productId);
+                    }
+                });
+            });
+        }
+
+        function toggleProduct(productId) {
+            // Don't allow toggling already added products
+            if (alreadyAddedProducts.includes(productId)) return;
+            
+            const item = document.querySelector(`[data-product-id="${productId}"]`);
+            const checkbox = document.getElementById(`product-${productId}`);
+            
+            if (checkbox.checked) {
+                selectedProducts.add(productId);
+                item.classList.add('selected');
+            } else {
+                selectedProducts.delete(productId);
+                item.classList.remove('selected');
+            }
+            
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = selectedProducts.size;
+            
+            if (count > 0) {
+                addButton.disabled = false;
+                addButton.textContent = `Agregar ${count} producto${count > 1 ? 's' : ''} seleccionado${count > 1 ? 's' : ''}`;
+            } else {
+                addButton.disabled = true;
+                addButton.textContent = 'Agregar productos seleccionados';
+            }
+        }
+
+        function resetModal() {
+            selectedProducts.clear();
+            searchInput.value = '';
+            filteredProducts = [];
+            hasSearched = false;
+            searchPlaceholder.style.display = 'block';
+            searchResults.style.display = 'none';
+            noResults.style.display = 'none';
+            updateSelectedCount();
+        }
+    </script>
+</body>
+</html>
